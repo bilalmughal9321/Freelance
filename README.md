@@ -4,7 +4,9 @@ This repository contains all the freelance projects I have worked on so far. Eac
 
 ## Projects Overview
 
-coming soon.....
+- **Project 1**: Brief description of what the project is about.
+- **Project 2**: Brief description of what the project is about.
+- **Project 3**: Brief description of what the project is about.
 
 ## Structure
 
