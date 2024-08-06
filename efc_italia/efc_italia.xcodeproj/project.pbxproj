@@ -1,0 +1,509 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9C9AF7EF2C51733800B981C6 /* subViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7EE2C51733800B981C6 /* subViews.swift */; };
+		9C9AF7F12C5173F400B981C6 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7F02C5173F400B981C6 /* DashboardView.swift */; };
+		9C9AF7F42C517A6000B981C6 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7F32C517A6000B981C6 /* LoginVM.swift */; };
+		9C9AF7F62C517A6B00B981C6 /* RegistrationVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7F52C517A6B00B981C6 /* RegistrationVM.swift */; };
+		9C9AF7F82C517ADA00B981C6 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7F72C517ADA00B981C6 /* Utils.swift */; };
+		9C9AF7FA2C517C9E00B981C6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7F92C517C9E00B981C6 /* Constant.swift */; };
+		9C9AF8002C517E6600B981C6 /* ApiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF7FF2C517E6600B981C6 /* ApiManager.swift */; };
+		9C9AF8022C517EB900B981C6 /* ApiEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF8012C517EB900B981C6 /* ApiEndpoint.swift */; };
+		9C9AF8052C517F1900B981C6 /* AuthenticateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9AF8042C517F1900B981C6 /* AuthenticateModels.swift */; };
+		9CD703CA2C513618006980F6 /* efc_italiaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD703C92C513618006980F6 /* efc_italiaApp.swift */; };
+		9CD703CC2C513618006980F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD703CB2C513618006980F6 /* ContentView.swift */; };
+		9CD703CE2C51361A006980F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CD703CD2C51361A006980F6 /* Assets.xcassets */; };
+		9CD703D12C51361A006980F6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CD703D02C51361A006980F6 /* Preview Assets.xcassets */; };
+		9CD703D82C513BC6006980F6 /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD703D72C513BC6006980F6 /* RegistrationView.swift */; };
+		DCA7BEFBE3BA3D1786AAA943 /* Pods_efc_italia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41DAC37B989BC9D3AF6083AE /* Pods_efc_italia.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1E99049FD792B3202D6D03DA /* Pods-efc_italia.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-efc_italia.release.xcconfig"; path = "Target Support Files/Pods-efc_italia/Pods-efc_italia.release.xcconfig"; sourceTree = "<group>"; };
+		2472FDB99A4772F4C37E70B2 /* Pods-efc_italia.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-efc_italia.debug.xcconfig"; path = "Target Support Files/Pods-efc_italia/Pods-efc_italia.debug.xcconfig"; sourceTree = "<group>"; };
+		41DAC37B989BC9D3AF6083AE /* Pods_efc_italia.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_efc_italia.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9C9AF7EE2C51733800B981C6 /* subViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = subViews.swift; sourceTree = "<group>"; };
+		9C9AF7F02C5173F400B981C6 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		9C9AF7F32C517A6000B981C6 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
+		9C9AF7F52C517A6B00B981C6 /* RegistrationVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationVM.swift; sourceTree = "<group>"; };
+		9C9AF7F72C517ADA00B981C6 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		9C9AF7F92C517C9E00B981C6 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		9C9AF7FF2C517E6600B981C6 /* ApiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiManager.swift; sourceTree = "<group>"; };
+		9C9AF8012C517EB900B981C6 /* ApiEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndpoint.swift; sourceTree = "<group>"; };
+		9C9AF8042C517F1900B981C6 /* AuthenticateModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticateModels.swift; sourceTree = "<group>"; };
+		9CD703C62C513618006980F6 /* efc_italia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = efc_italia.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CD703C92C513618006980F6 /* efc_italiaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = efc_italiaApp.swift; sourceTree = "<group>"; };
+		9CD703CB2C513618006980F6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9CD703CD2C51361A006980F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9CD703D02C51361A006980F6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9CD703D72C513BC6006980F6 /* RegistrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9CD703C32C513618006980F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA7BEFBE3BA3D1786AAA943 /* Pods_efc_italia.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8AA3DBB7E3CB9CB8F5AEE9BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41DAC37B989BC9D3AF6083AE /* Pods_efc_italia.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9C9AF7ED2C51732800B981C6 /* SubViews */ = {
+			isa = PBXGroup;
+			children = (
+				9C9AF7EE2C51733800B981C6 /* subViews.swift */,
+			);
+			path = SubViews;
+			sourceTree = "<group>";
+		};
+		9C9AF7F22C517A4E00B981C6 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		9C9AF7FB2C517DDA00B981C6 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				9C9AF7F32C517A6000B981C6 /* LoginVM.swift */,
+				9CD703CB2C513618006980F6 /* ContentView.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		9C9AF7FC2C517DE000B981C6 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				9CD703D72C513BC6006980F6 /* RegistrationView.swift */,
+				9C9AF7F52C517A6B00B981C6 /* RegistrationVM.swift */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		9C9AF7FE2C517E5400B981C6 /* Nerworking */ = {
+			isa = PBXGroup;
+			children = (
+				9C9AF7FF2C517E6600B981C6 /* ApiManager.swift */,
+				9C9AF8012C517EB900B981C6 /* ApiEndpoint.swift */,
+				9C9AF8032C517F0200B981C6 /* Models */,
+			);
+			path = Nerworking;
+			sourceTree = "<group>";
+		};
+		9C9AF8032C517F0200B981C6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9C9AF8042C517F1900B981C6 /* AuthenticateModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9CD703BD2C513618006980F6 = {
+			isa = PBXGroup;
+			children = (
+				9CD703C82C513618006980F6 /* efc_italia */,
+				9CD703C72C513618006980F6 /* Products */,
+				A5FAA00ED1527E23355FCA92 /* Pods */,
+				8AA3DBB7E3CB9CB8F5AEE9BF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		9CD703C72C513618006980F6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9CD703C62C513618006980F6 /* efc_italia.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9CD703C82C513618006980F6 /* efc_italia */ = {
+			isa = PBXGroup;
+			children = (
+				9C9AF7FE2C517E5400B981C6 /* Nerworking */,
+				9C9AF7FC2C517DE000B981C6 /* Register */,
+				9C9AF7FB2C517DDA00B981C6 /* Login */,
+				9C9AF7F22C517A4E00B981C6 /* Authentication */,
+				9C9AF7ED2C51732800B981C6 /* SubViews */,
+				9CD703CF2C51361A006980F6 /* Preview Content */,
+				9CD703C92C513618006980F6 /* efc_italiaApp.swift */,
+				9C9AF7F02C5173F400B981C6 /* DashboardView.swift */,
+				9C9AF7F72C517ADA00B981C6 /* Utils.swift */,
+				9C9AF7F92C517C9E00B981C6 /* Constant.swift */,
+				9CD703CD2C51361A006980F6 /* Assets.xcassets */,
+			);
+			path = efc_italia;
+			sourceTree = "<group>";
+		};
+		9CD703CF2C51361A006980F6 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9CD703D02C51361A006980F6 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A5FAA00ED1527E23355FCA92 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2472FDB99A4772F4C37E70B2 /* Pods-efc_italia.debug.xcconfig */,
+				1E99049FD792B3202D6D03DA /* Pods-efc_italia.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9CD703C52C513618006980F6 /* efc_italia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CD703D42C51361A006980F6 /* Build configuration list for PBXNativeTarget "efc_italia" */;
+			buildPhases = (
+				E42521EBE369249E3A6B3CA4 /* [CP] Check Pods Manifest.lock */,
+				9CD703C22C513618006980F6 /* Sources */,
+				9CD703C32C513618006980F6 /* Frameworks */,
+				9CD703C42C513618006980F6 /* Resources */,
+				46B314AD885473F15969F062 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = efc_italia;
+			productName = efc_italia;
+			productReference = 9CD703C62C513618006980F6 /* efc_italia.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9CD703BE2C513618006980F6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					9CD703C52C513618006980F6 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 9CD703C12C513618006980F6 /* Build configuration list for PBXProject "efc_italia" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9CD703BD2C513618006980F6;
+			productRefGroup = 9CD703C72C513618006980F6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9CD703C52C513618006980F6 /* efc_italia */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9CD703C42C513618006980F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CD703D12C51361A006980F6 /* Preview Assets.xcassets in Resources */,
+				9CD703CE2C51361A006980F6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		46B314AD885473F15969F062 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-efc_italia/Pods-efc_italia-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-efc_italia/Pods-efc_italia-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-efc_italia/Pods-efc_italia-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E42521EBE369249E3A6B3CA4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-efc_italia-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9CD703C22C513618006980F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9C9AF7F62C517A6B00B981C6 /* RegistrationVM.swift in Sources */,
+				9CD703D82C513BC6006980F6 /* RegistrationView.swift in Sources */,
+				9C9AF8002C517E6600B981C6 /* ApiManager.swift in Sources */,
+				9C9AF7FA2C517C9E00B981C6 /* Constant.swift in Sources */,
+				9C9AF7EF2C51733800B981C6 /* subViews.swift in Sources */,
+				9C9AF7F42C517A6000B981C6 /* LoginVM.swift in Sources */,
+				9C9AF7F12C5173F400B981C6 /* DashboardView.swift in Sources */,
+				9C9AF8022C517EB900B981C6 /* ApiEndpoint.swift in Sources */,
+				9CD703CC2C513618006980F6 /* ContentView.swift in Sources */,
+				9CD703CA2C513618006980F6 /* efc_italiaApp.swift in Sources */,
+				9C9AF8052C517F1900B981C6 /* AuthenticateModels.swift in Sources */,
+				9C9AF7F82C517ADA00B981C6 /* Utils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9CD703D22C51361A006980F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9CD703D32C51361A006980F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9CD703D52C51361A006980F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2472FDB99A4772F4C37E70B2 /* Pods-efc_italia.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"efc_italia/Preview Content\"";
+				DEVELOPMENT_TEAM = X9ZFPJV65B;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bitjeem.ios.ent.efc-italia";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9CD703D62C51361A006980F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1E99049FD792B3202D6D03DA /* Pods-efc_italia.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"efc_italia/Preview Content\"";
+				DEVELOPMENT_TEAM = X9ZFPJV65B;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.bitjeem.ios.ent.efc-italia";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9CD703C12C513618006980F6 /* Build configuration list for PBXProject "efc_italia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CD703D22C51361A006980F6 /* Debug */,
+				9CD703D32C51361A006980F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9CD703D42C51361A006980F6 /* Build configuration list for PBXNativeTarget "efc_italia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CD703D52C51361A006980F6 /* Debug */,
+				9CD703D62C51361A006980F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9CD703BE2C513618006980F6 /* Project object */;
+}
