@@ -20,4 +20,4 @@ Each project directory includes:
 
 - The `Pods` directories are excluded from version control to keep the repository clean and manageable. Ensure to run `pod install` in each project directory to set up the necessary dependencies.
 
-Thank you for visiting my repository. Feel free to reach out at `bilal.mughal770@gmail.com` if you have any questions or need further information.
+Thank you for visiting my repository. Feel free to reach out at bilal.mughal770@gmail.com if you have any questions or need further information.
