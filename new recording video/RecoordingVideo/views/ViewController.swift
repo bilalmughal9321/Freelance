@@ -9,6 +9,8 @@ import UIKit
 import AVFoundation
 import Photos
 
+
+
 class ViewController: UIViewController {
     
     var captureSession: AVCaptureSession!
@@ -17,8 +19,14 @@ class ViewController: UIViewController {
     var isRecording = false
     var timer: CGFloat = 10
     var progress: CGFloat = 0.0
-//    let themeRed: UIColor = UIColor(red: 205/255, green: 28/255, blue: 9/255, alpha: 1)
-
+    var countdownTimer: Timer?
+    var remainingTime: CGFloat = 0
+    var outputFileURLS: URL!
+    var widthAnchor: NSLayoutConstraint? = nil
+    var shouldLockOrientation = false
+    
+//    let fonts = "Matt Antique Bold"
+    
     lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
@@ -71,7 +79,6 @@ class ViewController: UIViewController {
     var recordButton: UILabel = {
         let recordButton = UILabel()
         recordButton.textColor = .white
-//        recordButton.backgroundColor = UIColor(red: 77/255, green: 62/255, blue: 60/255, alpha: 1.0)
         recordButton.backgroundColor = .themeRed
         recordButton.layer.masksToBounds = true
         recordButton.layer.cornerRadius = 20
@@ -80,7 +87,6 @@ class ViewController: UIViewController {
         recordButton.setFont()
         return recordButton
     }()
-    
     
     var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -117,7 +123,6 @@ class ViewController: UIViewController {
     var countDownView: UIView = {
        let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.backgroundColor = UIColor(red: 77/255, green: 62/255, blue: 60/255, alpha: 1.0)
         view.backgroundColor = .themeRed
         return view
     }()
@@ -125,7 +130,6 @@ class ViewController: UIViewController {
     var countdownLabel: UILabel = {
         let label = UILabel()
         label.text = "2"
-//        label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         label.textAlignment = .center
         label.textColor = .white
         label.minimumScaleFactor = 0.5
@@ -147,14 +151,6 @@ class ViewController: UIViewController {
         }
     }
 
-    var countdownTimer: Timer?
-    var remainingTime: CGFloat = 0
-    var outputFileURLS: URL!
-    var widthAnchor: NSLayoutConstraint? = nil
-    var shouldLockOrientation = false
-    
-    let fonts = "Matt Antique Bold"
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -168,41 +164,13 @@ class ViewController: UIViewController {
         recordButton.addGestureRecognizer(tapGest)
     }
 
-    func setupSettingButton() {
-        let settingsButton = UIButton(type: .system)
-        let settingsImage = UIImage(systemName: "gear") // Using system image "gear"
-        settingsButton.setImage(settingsImage, for: .normal)
-        settingsButton.tintColor = .black // Optional: Set image color
-        settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
-        settingsButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(settingsButton)
-
-        NSLayoutConstraint.activate([
-            settingsButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            settingsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            settingsButton.widthAnchor.constraint(equalToConstant: 50), // Set appropriate size
-            settingsButton.heightAnchor.constraint(equalToConstant: 50) // Set appropriate size
-        ])
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.updateVideoPreviewLayerFrame()
     }
-
-    @objc func openSettings() {
-        let vc = SettingsViewController()
-        vc.onSave = { [weak self] time in
-            self?.timer = CGFloat(time)
-//            self?.recordButton.text = "Start \(Int(time))-Second Recording"
-            self?.recordButton.text = "Začať nahrávanie na  \(Int(time)) sekúnd"
-//            self?.recordButton.setTitle("Start \(Int(time))-Second Recording", for: .normal)
-        }
-        vc.modalPresentationStyle = .fullScreen
-        vc.modalTransitionStyle = .flipHorizontal
-        self.present(vc, animated: true)
-    }
-    
-  
-    
 
     func setupCamera() {
-        if isRealDevice {
+        if Constant.isRealDevice {
             captureSession = AVCaptureSession()
             captureSession.sessionPreset = .high
             
@@ -249,6 +217,14 @@ class ViewController: UIViewController {
             }
         }
         
+        
+        self.setConatinerView()
+        self.initDottedView()
+        self.initCountDownView()
+        
+    }
+    
+    func setConatinerView() {
         let previewHeight = view.bounds.height / 4
         let previewWidth = view.bounds.width / 1.25
         let previewX = (view.bounds.width - previewWidth) / 2
@@ -263,12 +239,12 @@ class ViewController: UIViewController {
         containerView.widthAnchor.constraint(equalToConstant: previewWidth).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: previewHeight).isActive = true
         
-        if isRealDevice {
-                    self.containerView.layer.addSublayer(self.videoPreviewLayer)
+        if Constant.isRealDevice {
+            self.containerView.layer.addSublayer(self.videoPreviewLayer)
         }
         
         Thread.mainThread {
-            if isRealDevice{
+            if Constant.isRealDevice{
                 self.videoPreviewLayer.frame = self.containerView.bounds
             }
             self.titleLbl.frame = CGRect(x: self.containerView.frame.origin.x,
@@ -277,41 +253,8 @@ class ViewController: UIViewController {
                                          height: 50)
         }
         
-        if isRealDevice{
+        if Constant.isRealDevice{
             videoPreviewLayer.cornerRadius = 10
-        }
-
-        self.initDottedView()
-        self.initCountDownView()
-        
-    }
-    
-    func initLayers() {
-        let previewHeight = view.bounds.height / 4
-        let previewWidth = view.bounds.width / 1.25
-        let previewX = (view.bounds.width - previewWidth) / 2
-        let previewY = (view.bounds.height - previewHeight) / 2
-        
-        self.view.addSubview(titleLbl)
-        
-        self.view.addSubview(containerView)
-        
-        containerView.layer.addSublayer(videoPreviewLayer)
-        
-        NSLayoutConstraint.activate([
-            containerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            containerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0),
-            containerView.widthAnchor.constraint(equalToConstant: previewWidth),
-            containerView.heightAnchor.constraint(equalToConstant: previewHeight)
-        ])
-//        containerView.layer.addSublayer(videoPreviewLayer)
-        titleLbl.frame = CGRect(x: previewX, y: previewY - 60, width: previewWidth, height: 50)
-        recordButton.frame = CGRect(x: previewX, y: videoPreviewLayer.frame.maxY + 30, width: previewWidth, height: 50)
-//        videoPreviewLayer.frame = CGRect(x: containerView.frame.minX, y: containerView.frame.minY, width: containerView.frame.width, height: containerView.frame.height)
-        
-        
-        Thread.mainThread {
-            self.captureSession.startRunning()
         }
     }
     
@@ -350,8 +293,6 @@ class ViewController: UIViewController {
         countDownView.alpha = 0
         countdownLabel.alpha = 0
     }
-    
-    
 
     func setupUI() {
         view.addSubview(recordButton)
@@ -373,13 +314,36 @@ class ViewController: UIViewController {
         ])
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        self.updateVideoPreviewLayerFrame()
+    func setupSettingButton() {
+        let settingsButton = UIButton(type: .system)
+        let settingsImage = UIImage(systemName: "gear") // Using system image "gear"
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.tintColor = .black // Optional: Set image color
+        settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(settingsButton)
+
+        NSLayoutConstraint.activate([
+            settingsButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            settingsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            settingsButton.widthAnchor.constraint(equalToConstant: 50), // Set appropriate size
+            settingsButton.heightAnchor.constraint(equalToConstant: 50) // Set appropriate size
+        ])
+    }
+
+    @objc func openSettings() {
+        let vc = SettingsViewController()
+        vc.onSave = { [weak self] time in
+            self?.timer = CGFloat(time)
+//            self?.recordButton.text = "Start \(Int(time))-Second Recording"
+            self?.recordButton.text = "Začať nahrávanie na  \(Int(time)) sekúnd"
+//            self?.recordButton.setTitle("Start \(Int(time))-Second Recording", for: .normal)
+        }
+        vc.modalPresentationStyle = .fullScreen
+        vc.modalTransitionStyle = .flipHorizontal
+        self.present(vc, animated: true)
     }
     
- 
-
     @objc func recordButtonTapped() {
         if isRecording {
             stopRecording()
@@ -413,7 +377,6 @@ class ViewController: UIViewController {
         })
     }
     
-
     func startRecording() {
         countDownView.alpha = 1
         countdownLabel.alpha = 1
@@ -427,7 +390,7 @@ class ViewController: UIViewController {
             self.animateDottedView()
             let outputPath = NSTemporaryDirectory() + UUID().uuidString + ".mov"
             let outputFileURL = URL(fileURLWithPath: outputPath)
-            if isRealDevice{
+            if Constant.isRealDevice{
                 self.movieOutput.startRecording(to: outputFileURL, recordingDelegate: self)
             }
             self.isRecording = true
@@ -459,7 +422,7 @@ class ViewController: UIViewController {
 //            unlockOrientation()
             countDownView.alpha = 0
             countdownLabel.alpha = 0
-            if isRealDevice{
+            if Constant.isRealDevice{
                 movieOutput.stopRecording()
             }
             isRecording = false
@@ -580,6 +543,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: AVCaptureFileOutputRecordingDelegate {
+    
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
@@ -704,26 +668,13 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
             }
         }
     }
+    
 }
 
-extension UIView {
-    func removeAllConstraints() {
-        // Remove all constraints affecting the view
-        NSLayoutConstraint.deactivate(self.constraints)
-        
-        // Remove any constraints from the superview that reference the view
-        if let superview = self.superview {
-            superview.constraints.forEach { constraint in
-                if constraint.firstItem as? UIView == self || constraint.secondItem as? UIView == self {
-                    superview.removeConstraint(constraint)
-                }
-            }
-        }
-    }
-}
 
 
 extension ViewController: playerStatusDelegate {
+    
     func discard() {
         actionButton(true)
         self.progressBar.alpha = 0
@@ -761,26 +712,10 @@ extension ViewController: playerStatusDelegate {
 }
 
 
-extension UILabel {
-    func setFont(size: CGFloat? = nil) {
-        self.font = UIFont(name: "Matt Antique Bold", size: self.font.pointSize)
-    }
-}
 
 
-struct Thread {
-    static func mainThread(_ completion: @escaping () -> ()) {
-        DispatchQueue.main.async {
-            completion()
-        }
-    }
-    
-    static func asynAfter(_ time: CGFloat, _ completion: @escaping () -> ()) {
-        DispatchQueue.main.asyncAfter(deadline: .now()+time, execute: {
-            completion()
-        })
-    }
-}
+
+
 
 
 //MARK: - ORIENTATION
@@ -824,7 +759,7 @@ extension ViewController {
         Thread.mainThread {
             self.containerView.frame = CGRect(x: x, y: y - 20, width: size, height: size)
             
-            if isRealDevice {
+            if Constant.isRealDevice {
                 self.videoPreviewLayer.frame = self.containerView.bounds
             }
             
@@ -832,7 +767,7 @@ extension ViewController {
             
             
             print("frame: \(self.titleLbl.frame)")
-            if isRealDevice{
+            if Constant.isRealDevice{
                 if let connection = self.videoPreviewLayer.connection {
                     switch UIDevice.current.orientation {
                     case .portrait:
@@ -856,28 +791,6 @@ extension ViewController {
 }
 
 
-func isRunningOnSimulator() -> Bool {
-    #if targetEnvironment(simulator)
-    return true
-    #else
-    return false
-    #endif
-}
-
-var isRealDevice: Bool{
-    let deviceType = UIDevice.current.model
-    if isRunningOnSimulator() {
-        print("Running on Simulator")
-        return false
-    } else {
-        print("Running on Device: \(deviceType)")
-        return true
-    }
-}
 
 
-extension UIColor {
-    static var themeRed: UIColor {
-        return UIColor(red: 205/255, green: 28/255, blue: 9/255, alpha: 1)
-    }
-}
+

@@ -32,9 +32,6 @@ class reviewController: UIViewController {
         saveBtn.layer.cornerRadius = 10
         saveBtn.setTitle("Vymazať video", for: .normal)
         saveBtn.setTitleColor(.white, for: .normal)
-//        saveBtn.textAlignment = .center
-//        saveBtn.minimumScaleFactor = 0.5
-//        saveBtn.numberOfLines = 0
         saveBtn.titleLabel?.setFont()
         saveBtn.addTarget(self, action: #selector(deleteBtnTap), for: .touchUpInside)
         saveBtn.isUserInteractionEnabled = true
@@ -70,7 +67,7 @@ class reviewController: UIViewController {
         super.viewDidLoad()
         
         
-        if isRealDevice{
+        if Constant.isRealDevice{
             guard let fileURL = fileURL else {
                 print("No file URL provided.")
                 return
