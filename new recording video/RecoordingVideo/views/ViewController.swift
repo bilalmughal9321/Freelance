@@ -24,9 +24,7 @@ class ViewController: UIViewController {
     var outputFileURLS: URL!
     var widthAnchor: NSLayoutConstraint? = nil
     var shouldLockOrientation = false
-    
-//    let fonts = "Matt Antique Bold"
-    
+        
     lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .gray
@@ -42,9 +40,7 @@ class ViewController: UIViewController {
         lbl.textColor = .black
         lbl.backgroundColor = .clear
         lbl.textAlignment = .center
-        lbl.font = UIFont(name: "Becky Tahlia", size: lbl.font.pointSize+20)
-        
-        
+        lbl.setFont()
         return lbl
     }()
 
@@ -209,6 +205,11 @@ class ViewController: UIViewController {
             if self.captureSession.canAddOutput(self.movieOutput) {
                 self.captureSession.addOutput(self.movieOutput)
             }
+            
+            if let connection = self.movieOutput.connection(with: .video) {
+                connection.videoOrientation = self.currentVideoOrientation()
+            }
+            
             self.videoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
             self.videoPreviewLayer.videoGravity = .resizeAspectFill
             
@@ -224,8 +225,25 @@ class ViewController: UIViewController {
         
     }
     
+    func currentVideoOrientation() -> AVCaptureVideoOrientation {
+        let orientation = UIDevice.current.orientation
+        
+        switch orientation {
+        case .portrait:
+            return .portrait
+        case .landscapeRight:
+            return .landscapeLeft
+        case .landscapeLeft:
+            return .landscapeRight
+        case .portraitUpsideDown:
+            return .portraitUpsideDown
+        default:
+            return .portrait
+        }
+    }
+    
     func setConatinerView() {
-        let previewHeight = view.bounds.height / 4
+        let previewHeight = view.bounds.height / 2
         let previewWidth = view.bounds.width / 1.25
         let previewX = (view.bounds.width - previewWidth) / 2
         let previewY = (view.bounds.height - previewHeight) / 2
@@ -235,9 +253,11 @@ class ViewController: UIViewController {
         self.view.addSubview(containerView)
         
         containerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        containerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0).isActive = true
-        containerView.widthAnchor.constraint(equalToConstant: previewWidth).isActive = true
-        containerView.heightAnchor.constraint(equalToConstant: previewHeight).isActive = true
+        containerView.centerYAnchor.constraint(equalToSystemSpacingBelow: self.view.centerYAnchor, multiplier: 0.9).isActive = true
+//        containerView.widthAnchor.constraint(equalToConstant: previewWidth).isActive = true
+//        containerView.heightAnchor.constraint(equalToConstant: previewHeight).isActive = true
+        containerView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.6).isActive = true
+        containerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8).isActive = true
         
         if Constant.isRealDevice {
             self.containerView.layer.addSublayer(self.videoPreviewLayer)
@@ -303,13 +323,13 @@ class ViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             recordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            recordButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            recordButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0),
             recordButton.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1),
             recordButton.heightAnchor.constraint(equalToConstant: 50),
 
             counterLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            counterLabel.bottomAnchor.constraint(equalTo: recordButton.topAnchor, constant: -10),
-            counterLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 1),
+            counterLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
+            counterLabel.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
             counterLabel.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
@@ -441,7 +461,7 @@ class ViewController: UIViewController {
     @objc func updateCounterLabel() {
         remainingTime -= 1
 //        Zostáva čas 10 sekúnd
-        counterLabel.text = "Zostáva čas \(Int(remainingTime)) sekúnd"
+        counterLabel.text = "Zostáva čas \(Int(remainingTime)) s"
 //        counterLabel.text = "Time remaining: \(Int(remainingTime)) seconds"
         counterLabel.alpha = 1
 
@@ -555,7 +575,7 @@ extension ViewController: AVCaptureFileOutputRecordingDelegate {
             let vc = reviewController()
             vc.fileURL = outputFileURL
             vc.delgate = self 
-//            vc.modalPresentationStyle = .fullScreen
+            vc.modalPresentationStyle = .fullScreen
 //            vc.modalTransitionStyle = .flipHorizontal
             self.present(vc, animated: true)
             
@@ -757,13 +777,13 @@ extension ViewController {
         
             // Update the frame of the view
         Thread.mainThread {
-            self.containerView.frame = CGRect(x: x, y: y - 20, width: size, height: size)
+//            self.containerView.frame = CGRect(x: x, y: y - 20, width: size, height: size)
             
             if Constant.isRealDevice {
                 self.videoPreviewLayer.frame = self.containerView.bounds
             }
             
-            self.titleLbl.frame = CGRect(x: y, y: x, width: size, height: 50)
+            self.titleLbl.frame = CGRect(x: y, y: self.containerView.frame.minY - 60, width: size, height: 50)
             
             
             print("frame: \(self.titleLbl.frame)")

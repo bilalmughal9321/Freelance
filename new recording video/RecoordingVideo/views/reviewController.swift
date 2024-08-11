@@ -13,6 +13,17 @@ class reviewController: UIViewController {
     
     var fileURL: URL?
     
+    var parentStackView: UIStackView = {
+       let stackView = UIStackView()
+        stackView.backgroundColor = .clear
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        stackView.backgroundColor = .clear
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -87,8 +98,40 @@ class reviewController: UIViewController {
             
             player.play()
         }
+     
+        self.view.addSubview(parentStackView)
         
-        setupActionButtons()
+        parentStackView.addArrangedSubview(playerViewController.view)
+        parentStackView.addArrangedSubview(stackView)
+        
+        
+        stackView.addArrangedSubview(saveBtn)
+        stackView.addArrangedSubview(deleteBtn)
+        
+        
+        NSLayoutConstraint.activate([
+            // parent stack view
+            parentStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            parentStackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0),
+            parentStackView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.8),
+            parentStackView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.9),
+            
+            // check view
+
+            
+            // player view
+//            playerViewController.view.centerXAnchor.constraint(equalTo: parentStackView.centerXAnchor, constant: 0),
+//            playerViewController.view.centerYAnchor.constraint(equalTo: parentStackView.centerYAnchor, constant: 0),
+//            playerViewController.view.widthAnchor.constraint(equalTo: parentStackView.widthAnchor, multiplier: 1),
+//            playerViewController.view.heightAnchor.constraint(equalTo: parentStackView.heightAnchor, multiplier: 1),
+            
+            // buttons view
+            stackView.heightAnchor.constraint(equalToConstant: 60)
+        ])
+        
+        self.view.layoutIfNeeded()
+        
+//        setupActionButtons()
 
         
     }
@@ -96,15 +139,6 @@ class reviewController: UIViewController {
     func setupActionButtons() {
         let previewHeight = view.bounds.height / 4
         let previewWidth = view.bounds.width / 1.25
-        
-//        let saveBtn = UILabel()
-//        saveBtn.backgroundColor = .blue
-//        saveBtn.text = "Save"
-//        saveBtn.textAlignment = .center
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(saveBtnTap))
-//        saveBtn.isUserInteractionEnabled = true
-//        saveBtn.addGestureRecognizer(tap)
-//        saveBtn.addTarget(self, action: #selector(saveBtnTap), for: .touchUpInside)
         
         playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         

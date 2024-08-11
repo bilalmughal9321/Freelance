@@ -46,7 +46,7 @@
         <!--Review Controller-->
         <scene sceneID="56u-b6-WcD">
             <objects>
-                <viewController id="re7-Vv-Dpg" customClass="reviewController" customModule="RecoordingVideo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="reviewController" id="re7-Vv-Dpg" customClass="reviewController" customModule="RecoordingVideo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9KO-Yi-FkT">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,12 +59,32 @@
                                     <constraint firstAttribute="width" constant="200" id="cMl-CS-020"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="wp7-tg-ByL">
+                                <rect key="frame" x="39.333333333333343" y="97" width="314.33333333333326" height="683"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I8G-Co-Igd">
+                                        <rect key="frame" x="0.0" y="0.0" width="314.33333333333331" height="633"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="q0f-kH-uVq">
+                                        <rect key="frame" x="0.0" y="633" width="314.33333333333331" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="kwT-ex-WfN"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="nLc-W1-WkH"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="wp7-tg-ByL" firstAttribute="height" secondItem="nLc-W1-WkH" secondAttribute="height" multiplier="0.9" id="9fq-K2-JZQ"/>
+                            <constraint firstItem="wp7-tg-ByL" firstAttribute="centerX" secondItem="nLc-W1-WkH" secondAttribute="centerX" id="IjP-Ow-SV4"/>
                             <constraint firstItem="mAI-2Z-kEh" firstAttribute="centerY" secondItem="nLc-W1-WkH" secondAttribute="centerY" multiplier="0.9" id="VXA-bP-3iS"/>
                             <constraint firstItem="mAI-2Z-kEh" firstAttribute="centerX" secondItem="nLc-W1-WkH" secondAttribute="centerX" id="cDb-Hs-nXU"/>
+                            <constraint firstItem="wp7-tg-ByL" firstAttribute="centerY" secondItem="nLc-W1-WkH" secondAttribute="centerY" id="ibz-Vz-qXt"/>
+                            <constraint firstItem="wp7-tg-ByL" firstAttribute="width" secondItem="nLc-W1-WkH" secondAttribute="width" multiplier="0.8" id="vh0-eO-Py7"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -72,10 +92,57 @@
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="checkViews" destination="I8G-Co-Igd" id="DGj-ld-SZZ"/>
+                        <outlet property="stackView" destination="q0f-kH-uVq" id="6qI-B4-7Sx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A8l-ZA-7t8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1031" y="71"/>
+        </scene>
+        <!--Review2 View Controller-->
+        <scene sceneID="BMY-WC-LjB">
+            <objects>
+                <viewController id="UxQ-vT-WWg" customClass="review2ViewController" customModule="RecoordingVideo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fzc-4b-JuS">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mq1-mY-gHx">
+                                <rect key="frame" x="39.333333333333343" y="97" width="314.33333333333326" height="683"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nY3-b1-aZp">
+                                        <rect key="frame" x="0.0" y="0.0" width="314.33333333333331" height="633"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zDO-1t-jrr">
+                                        <rect key="frame" x="0.0" y="633" width="314.33333333333331" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="6Iw-bX-gr5"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Lq-Ng-BkH"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="mq1-mY-gHx" firstAttribute="width" secondItem="6Lq-Ng-BkH" secondAttribute="width" multiplier="0.8" id="FEu-om-0S0"/>
+                            <constraint firstItem="mq1-mY-gHx" firstAttribute="height" secondItem="6Lq-Ng-BkH" secondAttribute="height" multiplier="0.9" id="QNt-9W-kky"/>
+                            <constraint firstItem="mq1-mY-gHx" firstAttribute="centerX" secondItem="6Lq-Ng-BkH" secondAttribute="centerX" id="QWn-oz-1Rm"/>
+                            <constraint firstItem="mq1-mY-gHx" firstAttribute="centerY" secondItem="6Lq-Ng-BkH" secondAttribute="centerY" id="v4f-bT-XPp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="checkView" destination="nY3-b1-aZp" id="gJg-Xu-aQ6"/>
+                        <outlet property="stackView" destination="zDO-1t-jrr" id="Dot-iJ-bWE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fna-tl-ctC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1842" y="25"/>
         </scene>
     </scenes>
     <resources>
