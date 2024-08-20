@@ -16,7 +16,19 @@ class ViewController: UIViewController {
     var captureSession: AVCaptureSession!
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     var movieOutput: AVCaptureMovieFileOutput!
-    var isRecording = false
+    var isRecording = false {
+        didSet {
+            if isRecording {
+                hideSwitchCamera()
+//                lockOrientation()
+            }
+            else {
+                
+                showSwitchCamera()
+//                unlockOrientation()
+            }
+        }
+    }
     var timer: CGFloat = 10
     var progress: CGFloat = 0.0
     var countdownTimer: Timer?
@@ -24,6 +36,8 @@ class ViewController: UIViewController {
     var outputFileURLS: URL!
     var widthAnchor: NSLayoutConstraint? = nil
     var shouldLockOrientation = false
+    
+    var currentCameraPosition: AVCaptureDevice.Position = .front
         
     lazy var containerView: UIView = {
         let view = UIView()
@@ -146,6 +160,16 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    var cameraSwitchButton: UIButton = {
+        var view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.setImage(UIImage(named: "switchCamera")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        view.addTarget(self, action: #selector(switchCameraTap), for: .touchUpInside)
+        view.tintColor = .white
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -171,7 +195,7 @@ class ViewController: UIViewController {
             captureSession.sessionPreset = .high
             
             // Video Input
-            guard let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
+            guard let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: currentCameraPosition) else {
                 print("Front camera not available")
                 return
             }
@@ -222,6 +246,8 @@ class ViewController: UIViewController {
         self.setConatinerView()
         self.initDottedView()
         self.initCountDownView()
+        self.swittchCamera()
+        self.showSwitchCamera()
         
     }
     
@@ -289,6 +315,35 @@ class ViewController: UIViewController {
         ])
         dottedView.layer.cornerRadius = 5
         dottedView.alpha = 0
+    }
+    
+    func swittchCamera() {
+        self.view.addSubview(cameraSwitchButton)
+        
+        NSLayoutConstraint.activate([
+            cameraSwitchButton.widthAnchor.constraint(equalToConstant: 30),
+            cameraSwitchButton.heightAnchor.constraint(equalToConstant: 25),
+            cameraSwitchButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -10),
+            cameraSwitchButton.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
+        ])
+
+    }
+    
+    func showSwitchCamera() {
+        cameraSwitchButton.isUserInteractionEnabled = true
+        cameraSwitchButton.alpha = 1
+    }
+    
+    func hideSwitchCamera() {
+        cameraSwitchButton.isUserInteractionEnabled = false
+        cameraSwitchButton.alpha = 0
+    }
+    
+    @objc func switchCameraTap() {
+        currentCameraPosition = (currentCameraPosition == .front) ? .back : .front
+        captureSession.stopRunning()
+        setupCamera()
+        changePlayerOrientation()
     }
     
     func initCountDownView() {
@@ -397,31 +452,7 @@ class ViewController: UIViewController {
         })
     }
     
-    func startRecording() {
-        countDownView.alpha = 1
-        countdownLabel.alpha = 1
-        self.recordButton.isUserInteractionEnabled = false
-        countdown(from: 3)
-        
-//        lockOrientation()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
-            self.initProgressBar()
-            self.animateDottedView()
-            let outputPath = NSTemporaryDirectory() + UUID().uuidString + ".mov"
-            let outputFileURL = URL(fileURLWithPath: outputPath)
-            if Constant.isRealDevice{
-                self.movieOutput.startRecording(to: outputFileURL, recordingDelegate: self)
-            }
-            self.isRecording = true
-            self.updateRecordButtonTitle()
-            self.remainingTime = self.timer
-            self.updateCounterLabel()
-            self.countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateCounterLabel), userInfo: nil, repeats: true)
-            self.animateProgressBar()
-        })
-        
-    }
+    
 
     func animateProgressBar() {
         progressBar.layer.removeAllAnimations()
@@ -564,12 +595,45 @@ class ViewController: UIViewController {
 
 extension ViewController: AVCaptureFileOutputRecordingDelegate {
     
+    func startRecording() {
+        countDownView.alpha = 1
+        countdownLabel.alpha = 1
+        self.recordButton.isUserInteractionEnabled = false
+        countdown   (from: 3)
+        
+//        lockOrientation()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
+            self.initProgressBar()
+            self.animateDottedView()
+            if let connection = self.movieOutput.connection(with: .video) {
+                connection.videoOrientation = self.currentVideoOrientation()
+            }
+            
+            let outputPath = NSTemporaryDirectory() + UUID().uuidString + ".mov"
+            let outputFileURL = URL(fileURLWithPath: outputPath)
+            if Constant.isRealDevice{
+                self.movieOutput.startRecording(to: outputFileURL, recordingDelegate: self)
+            }
+            self.isRecording = true
+            self.updateRecordButtonTitle()
+            self.remainingTime = self.timer
+            self.updateCounterLabel()
+            self.countdownTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateCounterLabel), userInfo: nil, repeats: true)
+            self.animateProgressBar()
+        })
+        
+    }
+    
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let error = error {
             print("Error: \(error.localizedDescription)")
         } else {
             print("Video recorded successfully at: \(outputFileURL.path)")
             outputFileURLS = outputFileURL
+            
+            let abc = connections[0].videoPreviewLayer?.connection
+            let abcd = connections[1]
 //            actionButton()
             
             let vc = reviewController()
@@ -741,25 +805,33 @@ extension ViewController: playerStatusDelegate {
 //MARK: - ORIENTATION
 extension ViewController {
     
-//    override var shouldAutorotate: Bool {
-//        return !shouldLockOrientation
+    override var shouldAutorotate: Bool {
+        return !shouldLockOrientation
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return shouldLockOrientation ? .portrait : .all
+    }
+    
+//    func lockOrientations(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
+//        if let delegate = UIApplication.shared.delegate as? AppDelegate {
+//            delegate.orientationLock = orientation
+//            UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
+//            UINavigationController.attemptRotationToDeviceOrientation()
+//        }
 //    }
-//    
-//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-//        return shouldLockOrientation ? .portrait : .all
-//    }
-//    
-//    func lockOrientation() {
+    
+    func lockOrientation() {
 //        shouldLockOrientation = true
-//        let value = UIInterfaceOrientation.portrait.rawValue
-//        UIDevice.current.setValue(value, forKey: "orientation")
-//        self.setNeedsUpdateOfSupportedInterfaceOrientations()
-//    }
-//    
-//    func unlockOrientation() {
-//        shouldLockOrientation = false
-//        self.setNeedsUpdateOfSupportedInterfaceOrientations()
-//    }
+        let value = UIInterfaceOrientation.portrait.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
+        self.setNeedsUpdateOfSupportedInterfaceOrientations()
+    }
+    
+    func unlockOrientation() {
+        shouldLockOrientation = false
+        self.setNeedsUpdateOfSupportedInterfaceOrientations()
+    }
     
     func updateVideoPreviewLayerFrame() {
         
@@ -787,26 +859,29 @@ extension ViewController {
             
             
             print("frame: \(self.titleLbl.frame)")
-            if Constant.isRealDevice{
-                if let connection = self.videoPreviewLayer.connection {
-                    switch UIDevice.current.orientation {
-                    case .portrait:
-                        connection.videoOrientation = .portrait
-                    case .portraitUpsideDown:
-                        connection.videoOrientation = .portraitUpsideDown
-                    case .landscapeLeft:
-                        connection.videoOrientation = .landscapeRight
-                    case .landscapeRight:
-                        connection.videoOrientation = .landscapeLeft
-                    default:
-                        connection.videoOrientation = .portrait
-                    }
-                }
-            }
+            self.changePlayerOrientation()
+            
         }
         
 
        }
+    
+    func changePlayerOrientation() {
+        if Constant.isRealDevice{
+            switch UIDevice.current.orientation {
+            case .portrait:
+                self.videoPreviewLayer.connection?.videoOrientation = .portrait
+            case .portraitUpsideDown:
+                self.videoPreviewLayer.connection?.videoOrientation = .portraitUpsideDown
+            case .landscapeLeft:
+                self.videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+            case .landscapeRight:
+                self.videoPreviewLayer.connection?.videoOrientation = .landscapeLeft
+            default:
+                self.videoPreviewLayer.connection?.videoOrientation = .portrait
+            }
+        }
+    }
     
 }
 
