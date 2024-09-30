@@ -11,21 +11,21 @@ import SwiftUI
 
 
 @Model
-class SwiftDataCategory {
-    var id: UUID
-    var name: String
+final class SwiftDataCategory {
+    var ids: UUID
+    @Attribute(.unique) var name: String
     var recipes: [SwiftDataRecipe]?
 
     init(id: UUID = UUID(), name: String) {
-        self.id = id
+        self.ids = id
         self.name = name
     }
 }
 
 @Model
-class SwiftDataIngredient {
+final class SwiftDataIngredient {
     var id: UUID
-    var name: String
+    @Attribute(.unique) var name: String
 
     init(name: String) {
         self.id = UUID()
@@ -34,7 +34,7 @@ class SwiftDataIngredient {
 }
 
 @Model
-class SwiftDataRecipeIngredient {
+final class SwiftDataRecipeIngredient {
     let id = UUID()
     var ingredient: SwiftDataIngredient?
     var quantity: String
@@ -48,9 +48,9 @@ class SwiftDataRecipeIngredient {
 
 
 @Model
-class SwiftDataRecipe {
+final class SwiftDataRecipe {
     var id = UUID()
-    var name: String
+    @Attribute(.unique) var name: String
     var summary: String
     var categoryId: SwiftDataCategory? // Ensure MockCategory is also a Swift Data model
     var serving: Int

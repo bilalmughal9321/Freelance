@@ -37,7 +37,10 @@ struct IngredientsView: View {
                     IngredientForm(mode: mode)
                 }
                 .onAppear {
-                    ingredient = ingredientFromDBtoLocal(ingredient_db)
+                    applyFilter()
+                }
+                .onChange(of: query) {
+                    applyFilter()
                 }
         }
     }
@@ -49,13 +52,7 @@ struct IngredientsView: View {
         if ingredient.isEmpty {
             empty
         } else {
-            list(for: ingredient.filter {
-                if query.isEmpty {
-                    return true
-                } else {
-                    return $0.name.localizedStandardContains(query)
-                }
-            })
+            list(for: ingredient)
         }
     }
     
@@ -138,5 +135,25 @@ struct IngredientsView: View {
             print("Error in deleting ingredient")
         }
 //        storage.deleteIngredient(id: ingredient.id)
+    }
+    
+    private func applyFilter() {
+        // If query is empty, show all recipes
+        if query.isEmpty {
+            ingredient = ingredientFromDBtoLocal(ingredient_db)
+            return
+        }
+
+        // Create an NSPredicate to filter the SwiftDataRecipe
+        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
+
+        // Filter the original recipes using the predicate
+        let filteredDBRecipes = ingredient_db.filter { recipe in
+            // Use only non-nil values for evaluation
+            return predicate.evaluate(with: ["name": recipe.name])
+        }
+
+        // Convert the filtered results to tempRecipe
+        ingredient = ingredientFromDBtoLocal(filteredDBRecipes)
     }
 }

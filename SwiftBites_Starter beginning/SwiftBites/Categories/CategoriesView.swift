@@ -14,6 +14,8 @@ struct CategoriesView: View {
     @State var category_local: [tempCategory] = []
     @State var recipe_local: [tempRecipe] = []
     
+    @State private var filteredCategory: [tempCategory] = []
+    
     
     // MARK: - Body
     
@@ -22,7 +24,7 @@ struct CategoriesView: View {
             content
                 .navigationTitle("Categories")
                 .toolbar {
-                    if !category_local.isEmpty {
+                    if !filteredCategory.isEmpty {
                         NavigationLink(value: CategoryForm.Mode.add) {
                             Label("Add", systemImage: "plus")
                         }
@@ -34,49 +36,13 @@ struct CategoriesView: View {
                 .navigationDestination(for: RecipeForm.Mode.self) { mode in
                     RecipeForm(mode: mode)
                 }
+                .searchable(text: $query)
                 .onAppear {
-                    var catObj = [tempCategory]()
-                    
-                    var ingredients = [tempRecipeIngredient]()
-                    
-                    for catego in category_db {
-                        
-                        var RecipeObj = [tempRecipe]()
-                        
-                        for recipe2 in recipe_db {
-                            
-                            //                    if catego.id == recipe2.categoryId.id {
-                            
-                            for recipe_ingredient in recipe2.ingredients {
-                                
-                                ingredients.append(tempRecipeIngredient(id: recipe_ingredient.id, ingredient: tempIngredient(name: recipe_ingredient.ingredient?.name ?? ""), quantity: ""))
-                                
-                            }
-                            
-                            RecipeObj.append(
-                                tempRecipe(id: recipe2.id,
-                                           name: recipe2.name,
-                                           summary: recipe2.summary,
-                                           category: recipe2.categoryId == nil ? nil : tempCategory(id: recipe2.categoryId?.id ?? UUID(), name: recipe2.categoryId?.name ?? ""),
-                                           serving: recipe2.serving,
-                                           time: recipe2.time,
-                                           ingredients: ingredients,
-                                           instructions: recipe2.instructions,
-                                           imageData: recipe2.imageData))
-                            
-                            
-                            //                    }
-                        }
-                        if !RecipeObj.isEmpty {
-                            catObj.append( tempCategory(id: catego.id, name: catego.name, recipes: RecipeObj) )
-                        }
-                        else {
-                            catObj.append( tempCategory(id: catego.id, name: catego.name, recipes: []) )
-                        }
-                    }
-                    
-                    category_local = catObj
-                    
+//                    category_local = loadData(category_db)
+                    applyFilter()
+                }
+                .onChange(of: query) {
+                    applyFilter()
                 }
         }
         
@@ -86,16 +52,10 @@ struct CategoriesView: View {
     
     @ViewBuilder
     private var content: some View {
-        if category_local.isEmpty {
+        if filteredCategory.isEmpty {
             empty
         } else {
-            list(for: category_local.filter {
-                if query.isEmpty {
-                    return true
-                } else {
-                    return $0.name.localizedStandardContains(query)
-                }
-            })
+            list(for: filteredCategory)
         }
     }
     
@@ -133,6 +93,70 @@ struct CategoriesView: View {
                 }
             }
         }
-        .searchable(text: $query)
+        
+    }
+    
+    private func loadData(_ category: [SwiftDataCategory]) -> [tempCategory]{
+        var catObj = [tempCategory]()
+        
+        var ingredients = [tempRecipeIngredient]()
+        
+        for catego in category {
+            
+            var RecipeObj = [tempRecipe]()
+            
+            for recipe2 in recipe_db {
+                
+                if catego.ids == recipe2.categoryId?.ids {
+                    
+                    for recipe_ingredient in recipe2.ingredients {
+                        
+                        ingredients.append(tempRecipeIngredient(id: recipe_ingredient.id, ingredient: tempIngredient(name: recipe_ingredient.ingredient?.name ?? ""), quantity: ""))
+                        
+                    }
+                    
+                    RecipeObj.append(
+                        tempRecipe(id: recipe2.id,
+                                   name: recipe2.name,
+                                   summary: recipe2.summary,
+                                   category: recipe2.categoryId == nil ? nil : tempCategory(id: recipe2.categoryId?.ids ?? UUID(), name: recipe2.categoryId?.name ?? ""),
+                                   serving: recipe2.serving,
+                                   time: recipe2.time,
+                                   ingredients: ingredients,
+                                   instructions: recipe2.instructions,
+                                   imageData: recipe2.imageData))
+                    
+                    
+                }
+            }
+            if !RecipeObj.isEmpty {
+                catObj.append( tempCategory(id: catego.ids, name: catego.name, recipes: RecipeObj) )
+            }
+            else {
+                catObj.append( tempCategory(id: catego.ids, name: catego.name, recipes: []) )
+            }
+        }
+        
+        return catObj
+    }
+    
+    private func applyFilter() {
+        // If query is empty, show all recipes
+        if query.isEmpty {
+            filteredCategory = loadData(category_db)
+            return
+        }
+
+        // Create an NSPredicate to filter the SwiftDataRecipe
+        let predicate = NSPredicate(format: "name CONTAINS[cd] %@", query, query)
+
+        // Filter the original recipes using the predicate
+        let filteredDBRecipes = category_db.filter { recipe in
+            // Use only non-nil values for evaluation
+            return predicate.evaluate(with: ["name": recipe.name])
+        }
+
+        // Convert the filtered results to tempRecipe
+        filteredCategory = loadData(filteredDBRecipes)
     }
 }

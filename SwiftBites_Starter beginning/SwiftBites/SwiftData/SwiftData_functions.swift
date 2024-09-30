@@ -155,7 +155,7 @@ final class StorageData {
         
         // Fetch all categories that contain this recipe
         let fetchCategoriesDescriptor = FetchDescriptor<SwiftDataCategory>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.ids == id }
         )
         
         // Remove the recipe from all related categories
@@ -243,7 +243,7 @@ final class StorageData {
         
         // Create a FetchDescriptor to find the ingredient by its UUID
         let fetchDescriptor = FetchDescriptor<SwiftDataCategory>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.ids == id }
         )
         
         // Fetch the ingredient with the given ID
@@ -261,7 +261,7 @@ final class StorageData {
         
         // Fetch the ingredient by its UUID
         let fetchByIdDescriptor = FetchDescriptor<SwiftDataCategory>(
-            predicate: #Predicate { $0.id == id }
+            predicate: #Predicate { $0.ids == id }
         )
         
         guard let ingredient = try? context.fetch(fetchByIdDescriptor).first else {
@@ -270,7 +270,7 @@ final class StorageData {
         
         // Check if an ingredient with the same new name already exists (excluding the current one)
         let fetchByNameDescriptor = FetchDescriptor<SwiftDataCategory>(
-            predicate: #Predicate { $0.name == newName && $0.id != id }
+            predicate: #Predicate { $0.name == newName && $0.ids != id }
         )
         
         guard (try? context.fetch(fetchByNameDescriptor))?.isEmpty ?? true else {
@@ -303,7 +303,7 @@ func recipeFromDBtoLocal(_ model: [SwiftDataRecipe]) -> [tempRecipe]{
             tempRecipe(id: recipe.id,
                        name: recipe.name,
                        summary: recipe.summary,
-                       category: tempCategory(id: recipe.categoryId?.id ?? UUID(), name: recipe.categoryId?.name ?? ""),
+                       category: tempCategory(id: recipe.categoryId?.ids ?? UUID(), name: recipe.categoryId?.name ?? ""),
                        serving: recipe.serving,
                        time: recipe.time,
                        ingredients: ingredients,

@@ -311,71 +311,58 @@ struct RecipeForm: View {
         }
         
         for value in category_db {
-            if selectedCategry?.id == value.id {
+            if selectedCategry?.id == value.ids {
                 category_temp = value
             }
         }
         
         let db_storage = StorageData(context: context)
         
-        do {
+        
             switch mode {
             case .add:
                 
-                try db_storage.addRecipe(
-                    name: name,
-                    summary: summary,
-                    categoryId: category_temp,
-                    serving: serving,
-                    time: time,
-                    ingredients: ingredients_temp,
-                    instructions: instructions,
-                    imageData: imageData)
-                
-                //                try storage.addRecipe(
-                //                    name: name,
-                //                    summary: summary,
-                //                    category: category,
-                //                    serving: serving,
-                //                    time: time,
-                //                    ingredients: ingredients,
-                //                    instructions: instructions,
-                //                    imageData: imageData
-                //                )
+                do{
+                    try db_storage.addRecipe(
+                        name: name,
+                        summary: summary,
+                        categoryId: category_temp,
+                        serving: serving,
+                        time: time,
+                        ingredients: ingredients_temp,
+                        instructions: instructions,
+                        imageData: imageData)
+                }
+                catch {
+                    self.error = error
+                }
             case .edit(let recipe):
                 
-                try db_storage.updateRecipe(
-                    id: recipe.id,
-                    newName: name,
-                    newSummary: summary,
-                    newCategory: category_temp,
-                    newServing: serving,
-                    newTime: time,
-                    newIngredients: ingredients_temp,
-                    newInstructions: instructions,
-                    newImageData: imageData
-                )
-                
-                //                try storage.updateRecipe(
-                //                    id: recipe.id,
-                //                    name: name,
-                //                    summary: summary,
-                //                    category: category,
-                //                    serving: serving,
-                //                    time: time,
-                //                    ingredients: ingredients,
-                //                    instructions: instructions,
-                //                    imageData: imageData
-                //                )
+                do {
+                    try db_storage.updateRecipe(
+                        id: recipe.id,
+                        newName: name,
+                        newSummary: summary,
+                        newCategory: category_temp,
+                        newServing: serving,
+                        newTime: time,
+                        newIngredients: ingredients_temp,
+                        newInstructions: instructions,
+                        newImageData: imageData
+                    )
+                }
+                catch {
+                    self.error = error
+                }
             }
             DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
                 dismiss()
             })
             
-        }
-        catch {
-            self.error = error
-        }
+//        }
+//        catch {
+//            self.error = error
+//        }
     }
     
    
@@ -390,8 +377,8 @@ extension RecipeForm {
         var category = tempCategory()
         
         for _category in category_db {
-            if id == _category.id {
-                category = tempCategory(id: _category.id, name: _category.name)
+            if id == _category.ids {
+                category = tempCategory(id: _category.ids, name: _category.name)
             }
         }
         
@@ -405,7 +392,7 @@ extension RecipeForm {
     private func categoryDBtoLocal(_ model: [SwiftDataCategory]) -> [tempCategory]{
         var array = [tempCategory]()
         for value in model {
-            array.append(tempCategory(id: value.id, name: value.name))
+            array.append(tempCategory(id: value.ids, name: value.name))
         }
         return array
     }
