@@ -10,8 +10,11 @@ import UIKit
 
 // MARK: - CONSTANTS
 
+
+
 struct Constant {
-    static var fontName = "Matt Antique Bold"
+//    static var fontName = "Matt Antique Bold"
+    static var fontName = "SkemaProText-Medium"
     
     static func isRunningOnSimulator() -> Bool {
         #if targetEnvironment(simulator)
@@ -35,6 +38,9 @@ struct Constant {
     
     
 }
+
+
+
 
 // MARK: - THREAD
 
@@ -63,7 +69,7 @@ extension UIColor {
 
 extension UILabel {
     func setFont(size: CGFloat? = nil) {
-        self.font = UIFont(name: "Matt Antique Bold", size: self.font.pointSize)
+        self.font = UIFont(name: Constant.fontName, size: self.font.pointSize)
     }
 }
 

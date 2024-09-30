@@ -19,6 +19,11 @@
 		9CBA43762C51A15B00CD9C7B /* Hallies.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA43742C51A15B00CD9C7B /* Hallies.ttf */; };
 		9CBA43782C51A24900CD9C7B /* Cally-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA43772C51A24900CD9C7B /* Cally-Bold.ttf */; };
 		9CD8EB602C69424C004DDF83 /* review2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD8EB5F2C69424C004DDF83 /* review2ViewController.swift */; };
+		9CEA76232C7601E600E409BC /* SkemaProText-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CEA761F2C7601E500E409BC /* SkemaProText-MediumItalic.otf */; };
+		9CEA76242C7601E600E409BC /* SkemaProText-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9CEA76202C7601E600E409BC /* SkemaProText-Medium.otf */; };
+		9CEA76252C7601E600E409BC /* SkemaProText-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CEA76212C7601E600E409BC /* SkemaProText-MediumItalic.ttf */; };
+		9CEA76262C7601E600E409BC /* SkemaProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9CEA76222C7601E600E409BC /* SkemaProText-Medium.ttf */; };
+		9CEA76282C76026900E409BC /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEA76272C76026900E409BC /* Constant.swift */; };
 		9CED25252C4B171F008F5C28 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CED25242C4B171F008F5C28 /* VideoPlayerViewController.swift */; };
 		9CF2F60F2C497CDB006B3A4D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF2F60E2C497CDB006B3A4D /* AppDelegate.swift */; };
 		9CF2F6112C497CDB006B3A4D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF2F6102C497CDB006B3A4D /* SceneDelegate.swift */; };
@@ -42,6 +47,11 @@
 		9CBA43742C51A15B00CD9C7B /* Hallies.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hallies.ttf; sourceTree = "<group>"; };
 		9CBA43772C51A24900CD9C7B /* Cally-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Cally-Bold.ttf"; sourceTree = "<group>"; };
 		9CD8EB5F2C69424C004DDF83 /* review2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = review2ViewController.swift; sourceTree = "<group>"; };
+		9CEA761F2C7601E500E409BC /* SkemaProText-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SkemaProText-MediumItalic.otf"; sourceTree = "<group>"; };
+		9CEA76202C7601E600E409BC /* SkemaProText-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SkemaProText-Medium.otf"; sourceTree = "<group>"; };
+		9CEA76212C7601E600E409BC /* SkemaProText-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SkemaProText-MediumItalic.ttf"; sourceTree = "<group>"; };
+		9CEA76222C7601E600E409BC /* SkemaProText-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SkemaProText-Medium.ttf"; sourceTree = "<group>"; };
+		9CEA76272C76026900E409BC /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		9CED25242C4B171F008F5C28 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		9CF2F60B2C497CDB006B3A4D /* RecoordingVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecoordingVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF2F60E2C497CDB006B3A4D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +78,7 @@
 		9C2C6F112C65E5CF004C6808 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				9CEA761E2C75F83700E409BC /* Skema Pro Text */,
 				9C7439382C523B3A002A747A /* Matt Antique Bold.otf */,
 				9C4632C92C6286890049CF29 /* Becky Tahlia.ttf */,
 				9C7439392C523B3A002A747A /* Matt Antique Regular.otf */,
@@ -89,6 +100,17 @@
 				9C353AEF2C7534AC00064A57 /* newFile.swift */,
 			);
 			path = views;
+			sourceTree = "<group>";
+		};
+		9CEA761E2C75F83700E409BC /* Skema Pro Text */ = {
+			isa = PBXGroup;
+			children = (
+				9CEA76202C7601E600E409BC /* SkemaProText-Medium.otf */,
+				9CEA76222C7601E600E409BC /* SkemaProText-Medium.ttf */,
+				9CEA761F2C7601E500E409BC /* SkemaProText-MediumItalic.otf */,
+				9CEA76212C7601E600E409BC /* SkemaProText-MediumItalic.ttf */,
+			);
+			path = "Skema Pro Text";
 			sourceTree = "<group>";
 		};
 		9CF2F6022C497CDB006B3A4D = {
@@ -121,6 +143,7 @@
 				9CF2F61C2C497CDC006B3A4D /* Info.plist */,
 				9CED25242C4B171F008F5C28 /* VideoPlayerViewController.swift */,
 				9CD8EB5F2C69424C004DDF83 /* review2ViewController.swift */,
+				9CEA76272C76026900E409BC /* Constant.swift */,
 			);
 			path = RecoordingVideo;
 			sourceTree = "<group>";
@@ -183,17 +206,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CEA76252C7601E600E409BC /* SkemaProText-MediumItalic.ttf in Resources */,
 				9CBA43752C51A15B00CD9C7B /* Hallies.otf in Resources */,
 				9CF2F6182C497CDC006B3A4D /* Assets.xcassets in Resources */,
 				9CBA43762C51A15B00CD9C7B /* Hallies.ttf in Resources */,
+				9CEA76232C7601E600E409BC /* SkemaProText-MediumItalic.otf in Resources */,
 				9C1E700C2C5018250082432C /* Amarillo.ttf in Resources */,
 				9C74393A2C523B3A002A747A /* Matt Antique Bold.otf in Resources */,
+				9CEA76262C7601E600E409BC /* SkemaProText-Medium.ttf in Resources */,
 				9CF2F61B2C497CDC006B3A4D /* Base in Resources */,
 				9CBA43782C51A24900CD9C7B /* Cally-Bold.ttf in Resources */,
 				9C4632CA2C6286890049CF29 /* Becky Tahlia.ttf in Resources */,
 				9CF2F6162C497CDB006B3A4D /* Base in Resources */,
 				9C74393B2C523B3A002A747A /* Matt Antique Regular.otf in Resources */,
 				9C1E700D2C5018250082432C /* Amarillo.otf in Resources */,
+				9CEA76242C7601E600E409BC /* SkemaProText-Medium.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +238,7 @@
 				9CED25252C4B171F008F5C28 /* VideoPlayerViewController.swift in Sources */,
 				9C2C6F142C65E6AB004C6808 /* Utils.swift in Sources */,
 				9CF2F60F2C497CDB006B3A4D /* AppDelegate.swift in Sources */,
+				9CEA76282C76026900E409BC /* Constant.swift in Sources */,
 				9CF2F6112C497CDB006B3A4D /* SceneDelegate.swift in Sources */,
 				9CAC27D22C62398F00FD3474 /* reviewController.swift in Sources */,
 			);
@@ -382,7 +410,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cinqtech.RecoordingVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project.RecoordingVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -415,7 +443,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = cinqtech.RecoordingVideo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.project.RecoordingVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -12,6 +12,10 @@
 		<string>Matt Antique Bold.otf</string>
 		<string>Matt Antique Regular.otf</string>
 		<string>Becky Tahlia.ttf</string>
+		<string>SkemaProText-Medium.otf</string>
+		<string>SkemaProText-Medium.ttf</string>
+		<string>SkemaProText-MediumItalic.otf</string>
+		<string>SkemaProText-MediumItalic.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
