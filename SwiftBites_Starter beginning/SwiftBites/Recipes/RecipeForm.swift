@@ -300,7 +300,6 @@ struct RecipeForm: View {
     func save() {
         
         let db_storage = StorageData(context: context)
-        print(selectedCategry?.id)
         
 //        let category = storage.categories.first(where: { $0.id == categoryId })
         var ingredients_temp: [SwiftDataRecipeIngredient] = []
