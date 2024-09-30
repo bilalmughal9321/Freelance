@@ -52,10 +52,10 @@ final class SwiftDataRecipe {
     var id = UUID()
     @Attribute(.unique) var name: String
     var summary: String
-    var categoryId: SwiftDataCategory? // Ensure MockCategory is also a Swift Data model
+    var categoryId: SwiftDataCategory?
     var serving: Int
     var time: Int
-    var ingredients: [SwiftDataRecipeIngredient] // Assuming RecipeIngredient is also a Swift Data model
+    var ingredients: [SwiftDataRecipeIngredient]
     var instructions: String
     var imageData: Data?
     

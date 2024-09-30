@@ -299,6 +299,7 @@ struct RecipeForm: View {
     
     func save() {
         
+        let db_storage = StorageData(context: context)
         print(selectedCategry?.id)
         
 //        let category = storage.categories.first(where: { $0.id == categoryId })
@@ -307,7 +308,8 @@ struct RecipeForm: View {
         var category_temp: SwiftDataCategory? = nil
         
         for _recipe in ingredients {
-            ingredients_temp.append(SwiftDataRecipeIngredient(ingredient: SwiftDataIngredient(name: _recipe.ingredient.name), quantity: _recipe.quantity))
+            let existingIngredient = db_storage.findOrCreateIngredient(name: _recipe.ingredient.name)
+            ingredients_temp.append(SwiftDataRecipeIngredient(ingredient: existingIngredient, quantity: _recipe.quantity))
         }
         
         for value in category_db {
@@ -316,7 +318,7 @@ struct RecipeForm: View {
             }
         }
         
-        let db_storage = StorageData(context: context)
+        
         
         
             switch mode {

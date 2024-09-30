@@ -38,6 +38,23 @@ final class StorageData {
     
     // MARK: - Ingredients
     
+    func findOrCreateIngredient(name: String) -> SwiftDataIngredient {
+        // Create a fetch descriptor to look for an existing ingredient with the given name
+        let fetchDescriptor = FetchDescriptor<SwiftDataIngredient>(
+            predicate: #Predicate { $0.name == name }
+        )
+        
+        // Attempt to fetch the ingredient
+        if let existingIngredient = try? context.fetch(fetchDescriptor).first {
+            return existingIngredient
+        } else {
+            // If no such ingredient exists, create and return a new one
+            let newIngredient = SwiftDataIngredient(name: name)
+            context.insert(newIngredient)
+            return newIngredient
+        }
+    }
+    
     func addIngredient(name: String) throws {
         // Create a FetchDescriptor to check if the ingredient already exists
         let fetchDescriptor = FetchDescriptor<SwiftDataIngredient>(
