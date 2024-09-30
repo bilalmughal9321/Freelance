@@ -6,8 +6,8 @@ struct RecipesView: View {
     @State private var query = ""
     @State private var sortOrder = SortDescriptor(\tempRecipe.name)
     
-    @Query var cat:             [SwiftDataCategory]
-    @Query var recipe_db:       [SwiftDataRecipe]
+    @Query var cat:             [Categories]
+    @Query var recipe_db:       [Recipes]
     @State var recipe:          [tempRecipe] = []
     
     @State private var filteredRecipes: [tempRecipe] = []
@@ -162,7 +162,7 @@ struct RecipesView: View {
             return
         }
 
-        // Create an NSPredicate to filter the SwiftDataRecipe
+        // Create an NSPredicate to filter the Recipes
         let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
 
         // Filter the original recipes using the predicate

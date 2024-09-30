@@ -56,7 +56,7 @@ struct RecipeForm: View {
     @Environment(\.modelContext) private var context
     
     /// Swift Data variable
-    @Query var category_db: [SwiftDataCategory] = []
+    @Query var category_db: [Categories] = []
     
     /// State variable
     @State var category: [tempCategory] = []
@@ -302,13 +302,13 @@ struct RecipeForm: View {
         let db_storage = StorageData(context: context)
         
 //        let category = storage.categories.first(where: { $0.id == categoryId })
-        var ingredients_temp: [SwiftDataRecipeIngredient] = []
+        var ingredients_temp: [RecipeIngredients] = []
         
-        var category_temp: SwiftDataCategory? = nil
+        var category_temp: Categories? = nil
         
         for _recipe in ingredients {
             let existingIngredient = db_storage.findOrCreateIngredient(name: _recipe.ingredient.name)
-            ingredients_temp.append(SwiftDataRecipeIngredient(ingredient: existingIngredient, quantity: _recipe.quantity))
+            ingredients_temp.append(RecipeIngredients(ingredient: existingIngredient, quantity: _recipe.quantity))
         }
         
         for value in category_db {
@@ -327,7 +327,7 @@ struct RecipeForm: View {
                     try db_storage.addRecipe(
                         name: name,
                         summary: summary,
-                        categoryId: category_temp,
+                        category: category_temp,
                         serving: serving,
                         time: time,
                         ingredients: ingredients_temp,
@@ -390,7 +390,7 @@ extension RecipeForm {
         return category
     }
     
-    private func categoryDBtoLocal(_ model: [SwiftDataCategory]) -> [tempCategory]{
+    private func categoryDBtoLocal(_ model: [Categories]) -> [tempCategory]{
         var array = [tempCategory]()
         for value in model {
             array.append(tempCategory(id: value.ids, name: value.name))
@@ -398,7 +398,7 @@ extension RecipeForm {
         return array
     }
     
-    private func convertDBtoLocal(_ model: [SwiftDataRecipeIngredient])  -> [tempRecipeIngredient]{
+    private func convertDBtoLocal(_ model: [RecipeIngredients])  -> [tempRecipeIngredient]{
         var array = [tempRecipeIngredient]()
         
         for value in model {

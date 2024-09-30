@@ -16,8 +16,8 @@ struct IngredientsView: View {
     
     @Environment(\.modelContext) private var context
     
-    @Query var ingredient_db: [SwiftDataIngredient]
-    @Query var recipe_ingredient_db: [SwiftDataRecipeIngredient]
+    @Query var ingredient_db: [Ingredients]
+    @Query var recipe_ingredient_db: [RecipeIngredients]
     @State var ingredient: [tempIngredient] = []
     
     // MARK: - Body

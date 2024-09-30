@@ -7,8 +7,8 @@ struct CategoriesView: View {
     
     
     /// Swift data variable
-    @Query var category_db: [SwiftDataCategory]
-    @Query var recipe_db: [SwiftDataRecipe]
+    @Query var category_db: [Categories]
+    @Query var recipe_db: [Recipes]
     
     /// @State
     @State var category_local: [tempCategory] = []
@@ -96,7 +96,7 @@ struct CategoriesView: View {
         
     }
     
-    private func loadData(_ category: [SwiftDataCategory]) -> [tempCategory]{
+    private func loadData(_ category: [Categories]) -> [tempCategory]{
         var catObj = [tempCategory]()
         
         var ingredients = [tempRecipeIngredient]()
@@ -107,7 +107,7 @@ struct CategoriesView: View {
             
             for recipe2 in recipe_db {
                 
-                if catego.ids == recipe2.categoryId?.ids {
+                if catego.ids == recipe2.category?.ids {
                     
                     for recipe_ingredient in recipe2.ingredients {
                         
@@ -119,7 +119,7 @@ struct CategoriesView: View {
                         tempRecipe(id: recipe2.id,
                                    name: recipe2.name,
                                    summary: recipe2.summary,
-                                   category: recipe2.categoryId == nil ? nil : tempCategory(id: recipe2.categoryId?.ids ?? UUID(), name: recipe2.categoryId?.name ?? ""),
+                                   category: recipe2.category == nil ? nil : tempCategory(id: recipe2.category?.ids ?? UUID(), name: recipe2.category?.name ?? ""),
                                    serving: recipe2.serving,
                                    time: recipe2.time,
                                    ingredients: ingredients,
@@ -147,7 +147,7 @@ struct CategoriesView: View {
             return
         }
 
-        // Create an NSPredicate to filter the SwiftDataRecipe
+        // Create an NSPredicate to filter the Recipes
         let predicate = NSPredicate(format: "name CONTAINS[cd] %@", query, query)
 
         // Filter the original recipes using the predicate

@@ -38,9 +38,9 @@ final class StorageData {
     
     // MARK: - Ingredients
     
-    func findOrCreateIngredient(name: String) -> SwiftDataIngredient {
+    func findOrCreateIngredient(name: String) -> Ingredients {
         // Create a fetch descriptor to look for an existing ingredient with the given name
-        let fetchDescriptor = FetchDescriptor<SwiftDataIngredient>(
+        let fetchDescriptor = FetchDescriptor<Ingredients>(
             predicate: #Predicate { $0.name == name }
         )
         
@@ -49,7 +49,7 @@ final class StorageData {
             return existingIngredient
         } else {
             // If no such ingredient exists, create and return a new one
-            let newIngredient = SwiftDataIngredient(name: name)
+            let newIngredient = Ingredients(name: name)
             context.insert(newIngredient)
             return newIngredient
         }
@@ -57,7 +57,7 @@ final class StorageData {
     
     func addIngredient(name: String) throws {
         // Create a FetchDescriptor to check if the ingredient already exists
-        let fetchDescriptor = FetchDescriptor<SwiftDataIngredient>(
+        let fetchDescriptor = FetchDescriptor<Ingredients>(
             predicate: #Predicate { $0.name == name }
         )
         
@@ -70,7 +70,7 @@ final class StorageData {
         }
         
         // If no ingredient exists, insert the new one
-        let ingredient = SwiftDataIngredient(name: name)
+        let ingredient = Ingredients(name: name)
         context.insert(ingredient)
         
         // Save the context
@@ -79,7 +79,7 @@ final class StorageData {
 
     func deleteIngredient(id: UUID) throws {
         // Create a FetchDescriptor to find the ingredient by its UUID
-        let fetchDescriptor = FetchDescriptor<SwiftDataIngredient>(
+        let fetchDescriptor = FetchDescriptor<Ingredients>(
             predicate: #Predicate { $0.id == id }
         )
         
@@ -95,7 +95,7 @@ final class StorageData {
 
     func updateIngredient(id: UUID, newName: String) throws  {
         // Fetch the ingredient by its UUID
-           let fetchByIdDescriptor = FetchDescriptor<SwiftDataIngredient>(
+           let fetchByIdDescriptor = FetchDescriptor<Ingredients>(
                predicate: #Predicate { $0.id == id }
            )
            
@@ -104,7 +104,7 @@ final class StorageData {
            }
 
            // Check if an ingredient with the same new name already exists (excluding the current one)
-           let fetchByNameDescriptor = FetchDescriptor<SwiftDataIngredient>(
+           let fetchByNameDescriptor = FetchDescriptor<Ingredients>(
                predicate: #Predicate { $0.name == newName && $0.id != id }
            )
            
@@ -123,14 +123,14 @@ final class StorageData {
     
     func addRecipe(name: String,
                    summary: String,
-                   categoryId: SwiftDataCategory?,
+                   category: Categories?,
                    serving: Int,
                    time: Int,
-                   ingredients: [SwiftDataRecipeIngredient],
+                   ingredients: [RecipeIngredients],
                    instructions: String,
                    imageData: Data?) throws {
         
-        let fetchDescriptor = FetchDescriptor<SwiftDataRecipe>(
+        let fetchDescriptor = FetchDescriptor<Recipes>(
             predicate: #Predicate { $0.name == name }
         )
         
@@ -143,9 +143,9 @@ final class StorageData {
         }
         
         // If no ingredient exists, insert the new one
-        let ingredient = SwiftDataRecipe(name: name,
+        let ingredient = Recipes(name: name,
                                      summary: summary,
-                                     categoryId: categoryId,
+                                     category: category,
                                      serving: serving,
                                      time: time,
                                      ingredients: ingredients,
@@ -161,7 +161,7 @@ final class StorageData {
     
     func deleteRecipe(id: UUID) throws {
         // Fetch the recipe by its ID
-        let fetchRecipeDescriptor = FetchDescriptor<SwiftDataRecipe>(
+        let fetchRecipeDescriptor = FetchDescriptor<Recipes>(
             predicate: #Predicate { $0.id == id }
         )
         
@@ -171,7 +171,7 @@ final class StorageData {
         }
         
         // Fetch all categories that contain this recipe
-        let fetchCategoriesDescriptor = FetchDescriptor<SwiftDataCategory>(
+        let fetchCategoriesDescriptor = FetchDescriptor<Categories>(
             predicate: #Predicate { $0.ids == id }
         )
         
@@ -191,15 +191,15 @@ final class StorageData {
     func updateRecipe(id: UUID,
                       newName: String,
                       newSummary: String,
-                      newCategory: SwiftDataCategory?,
+                      newCategory: Categories?,
                       newServing: Int,
                       newTime: Int,
-                      newIngredients: [SwiftDataRecipeIngredient],
+                      newIngredients: [RecipeIngredients],
                       newInstructions: String,
                       newImageData: Data?) throws {
         
         // Fetch the recipe by its UUID
-        let fetchByIdDescriptor = FetchDescriptor<SwiftDataRecipe>(
+        let fetchByIdDescriptor = FetchDescriptor<Recipes>(
             predicate: #Predicate { $0.id == id }
         )
         
@@ -209,7 +209,7 @@ final class StorageData {
         }
         
         // Check if another recipe with the same new name exists (excluding the current recipe)
-        let fetchByNameDescriptor = FetchDescriptor<SwiftDataRecipe>(
+        let fetchByNameDescriptor = FetchDescriptor<Recipes>(
             predicate: #Predicate { $0.name == newName && $0.id != id }
         )
         
@@ -220,7 +220,7 @@ final class StorageData {
         // Update the recipe's attributes
         recipeToUpdate.name = newName
         recipeToUpdate.summary = newSummary
-        recipeToUpdate.categoryId = newCategory
+        recipeToUpdate.category = newCategory
         recipeToUpdate.serving = newServing
         recipeToUpdate.time = newTime
         recipeToUpdate.ingredients = newIngredients
@@ -236,7 +236,7 @@ final class StorageData {
     
     func addCategory(name: String) throws {
         // Create a FetchDescriptor to check if the ingredient already exists
-        let fetchDescriptor = FetchDescriptor<SwiftDataCategory>(
+        let fetchDescriptor = FetchDescriptor<Categories>(
             predicate: #Predicate { $0.name == name }
         )
         
@@ -249,7 +249,7 @@ final class StorageData {
         }
         
         // If no ingredient exists, insert the new one
-        let category = SwiftDataCategory(name: name)
+        let category = Categories(name: name)
         context.insert(category)
         
         // Save the context
@@ -259,7 +259,7 @@ final class StorageData {
     func deleteCategoy(id: UUID) throws {
         
         // Create a FetchDescriptor to find the ingredient by its UUID
-        let fetchDescriptor = FetchDescriptor<SwiftDataCategory>(
+        let fetchDescriptor = FetchDescriptor<Categories>(
             predicate: #Predicate { $0.ids == id }
         )
         
@@ -277,7 +277,7 @@ final class StorageData {
     func updateCategory(id: UUID, newName: String) throws {
         
         // Fetch the ingredient by its UUID
-        let fetchByIdDescriptor = FetchDescriptor<SwiftDataCategory>(
+        let fetchByIdDescriptor = FetchDescriptor<Categories>(
             predicate: #Predicate { $0.ids == id }
         )
         
@@ -286,7 +286,7 @@ final class StorageData {
         }
         
         // Check if an ingredient with the same new name already exists (excluding the current one)
-        let fetchByNameDescriptor = FetchDescriptor<SwiftDataCategory>(
+        let fetchByNameDescriptor = FetchDescriptor<Categories>(
             predicate: #Predicate { $0.name == newName && $0.ids != id }
         )
         
@@ -305,7 +305,7 @@ final class StorageData {
 }
 
 
-func recipeFromDBtoLocal(_ model: [SwiftDataRecipe]) -> [tempRecipe]{
+func recipeFromDBtoLocal(_ model: [Recipes]) -> [tempRecipe]{
     
     var models = [tempRecipe]()
     var ingredients = [tempRecipeIngredient]()
@@ -320,7 +320,7 @@ func recipeFromDBtoLocal(_ model: [SwiftDataRecipe]) -> [tempRecipe]{
             tempRecipe(id: recipe.id,
                        name: recipe.name,
                        summary: recipe.summary,
-                       category: tempCategory(id: recipe.categoryId?.ids ?? UUID(), name: recipe.categoryId?.name ?? ""),
+                       category: tempCategory(id: recipe.category?.ids ?? UUID(), name: recipe.category?.name ?? ""),
                        serving: recipe.serving,
                        time: recipe.time,
                        ingredients: ingredients,
@@ -333,27 +333,27 @@ func recipeFromDBtoLocal(_ model: [SwiftDataRecipe]) -> [tempRecipe]{
     
 }
 
-func recipeFromLocalToDB(_ model: [tempRecipe]) -> [SwiftDataRecipe] {
+func recipeFromLocalToDB(_ model: [tempRecipe]) -> [Recipes] {
     
-    var models = [SwiftDataRecipe]()
-    var ingredients = [SwiftDataRecipeIngredient]()
+    var models = [Recipes]()
+    var ingredients = [RecipeIngredients]()
     var ingredientsId = [UUID]()
     
     for recipe in model {
         for ingredient in recipe.ingredients {
-            ingredients.append(SwiftDataRecipeIngredient(ingredient: SwiftDataIngredient(name: ingredient.ingredient.name), quantity: ""))
+            ingredients.append(RecipeIngredients(ingredient: Ingredients(name: ingredient.ingredient.name), quantity: ""))
         }
         
-        let mockCategory = SwiftDataCategory(id: recipe.category?.id ?? UUID(), name: recipe.name)
+        let mockCategory = Categories(id: recipe.category?.id ?? UUID(), name: recipe.name)
         
-//        models.append(SwiftDataRecipe(id: recipe.id, name: recipe.name, summary: recipe.summary, categoryId: recipe.category?.id ?? UUID(), serving: recipe.serving, time: recipe.time, ingredients: ingredients, instructions: recipe.instructions, imageData: recipe.imageData))
+//        models.append(Recipes(id: recipe.id, name: recipe.name, summary: recipe.summary, categoryId: recipe.category?.id ?? UUID(), serving: recipe.serving, time: recipe.time, ingredients: ingredients, instructions: recipe.instructions, imageData: recipe.imageData))
     }
     
     return models
     
 }
 
-func ingredientFromDBtoLocal(_ model: [SwiftDataIngredient]) -> [tempIngredient] {
+func ingredientFromDBtoLocal(_ model: [Ingredients]) -> [tempIngredient] {
     
     var models: [tempIngredient] = []
     
@@ -365,12 +365,12 @@ func ingredientFromDBtoLocal(_ model: [SwiftDataIngredient]) -> [tempIngredient]
     
 }
 
-func ingredientFromLocaltoDB(_ model: [tempIngredient]) -> [SwiftDataIngredient] {
+func ingredientFromLocaltoDB(_ model: [tempIngredient]) -> [Ingredients] {
     
-    var models: [SwiftDataIngredient] = []
+    var models: [Ingredients] = []
     
     for _ingredient in model {
-        models.append(SwiftDataIngredient(name: _ingredient.name))
+        models.append(Ingredients(name: _ingredient.name))
     }
     
     return models

@@ -11,10 +11,10 @@ import SwiftUI
 
 
 @Model
-final class SwiftDataCategory {
+final class Categories {
     var ids: UUID
     @Attribute(.unique) var name: String
-    var recipes: [SwiftDataRecipe]?
+    var recipes: [Recipes]?
 
     init(id: UUID = UUID(), name: String) {
         self.ids = id
@@ -23,7 +23,7 @@ final class SwiftDataCategory {
 }
 
 @Model
-final class SwiftDataIngredient {
+final class Ingredients {
     var id: UUID
     @Attribute(.unique) var name: String
 
@@ -34,12 +34,12 @@ final class SwiftDataIngredient {
 }
 
 @Model
-final class SwiftDataRecipeIngredient {
+final class RecipeIngredients {
     let id = UUID()
-    var ingredient: SwiftDataIngredient?
+    var ingredient: Ingredients?
     var quantity: String
     
-    init(ingredient: SwiftDataIngredient? = nil, quantity: String) {
+    init(ingredient: Ingredients? = nil, quantity: String) {
         self.ingredient = ingredient
         self.quantity = quantity
     }
@@ -48,14 +48,14 @@ final class SwiftDataRecipeIngredient {
 
 
 @Model
-final class SwiftDataRecipe {
+final class Recipes {
     var id = UUID()
     @Attribute(.unique) var name: String
     var summary: String
-    var categoryId: SwiftDataCategory?
+    var category: Categories?
     var serving: Int
     var time: Int
-    var ingredients: [SwiftDataRecipeIngredient]
+    var ingredients: [RecipeIngredients]
     var instructions: String
     var imageData: Data?
     
@@ -63,17 +63,17 @@ final class SwiftDataRecipe {
         id: UUID = UUID(),
         name: String = "",
         summary: String = "",
-        categoryId: SwiftDataCategory? = nil,
+        category: Categories? = nil,
         serving: Int = 1,
         time: Int = 5,
-        ingredients: [SwiftDataRecipeIngredient] = [],
+        ingredients: [RecipeIngredients] = [],
         instructions: String = "",
         imageData: Data? = nil
     ) {
         self.id = id
         self.name = name
         self.summary = summary
-        self.categoryId = categoryId
+        self.category = category
         self.serving = serving
         self.time = time
         self.ingredients = ingredients
