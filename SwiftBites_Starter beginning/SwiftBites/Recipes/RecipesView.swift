@@ -8,7 +8,7 @@ struct RecipesView: View {
     
     @Query var cat:             [Categories]
     @Query var recipe_db:       [Recipes]
-    @State var recipe:          [tempRecipe] = []
+//    @State var recipe:          [tempRecipe] = []
     
     @State private var filteredRecipes: [Recipes] = []
         

@@ -374,74 +374,74 @@ final class StorageData {
 }
 
 
-func recipeFromDBtoLocal(_ model: [Recipes]) -> [tempRecipe]{
-    
-    var models = [tempRecipe]()
-    var ingredients = [tempRecipeIngredient]()
-    
-    for recipe in model {
-        
-        for ingredient in recipe.ingredients {
-            ingredients.append(tempRecipeIngredient(ingredient: tempIngredient(name: ingredient.ingredient?.name ?? ""), quantity: ""))
-        }
-        
-        models.append(
-            tempRecipe(id: recipe.id,
-                       name: recipe.name,
-                       summary: recipe.summary,
-                       category: tempCategory(id: recipe.category?.ids ?? UUID(), name: recipe.category?.name ?? ""),
-                       serving: recipe.serving,
-                       time: recipe.time,
-                       ingredients: ingredients,
-                       instructions: recipe.instructions,
-                       imageData: recipe.imageData))
-        
-    }
-    
-    return models
-    
-}
+//func recipeFromDBtoLocal(_ model: [Recipes]) -> [tempRecipe]{
+//    
+//    var models = [tempRecipe]()
+//    var ingredients = [tempRecipeIngredient]()
+//    
+//    for recipe in model {
+//        
+//        for ingredient in recipe.ingredients {
+//            ingredients.append(tempRecipeIngredient(ingredient: tempIngredient(name: ingredient.ingredient?.name ?? ""), quantity: ""))
+//        }
+//        
+//        models.append(
+//            tempRecipe(id: recipe.id,
+//                       name: recipe.name,
+//                       summary: recipe.summary,
+//                       category: tempCategory(id: recipe.category?.ids ?? UUID(), name: recipe.category?.name ?? ""),
+//                       serving: recipe.serving,
+//                       time: recipe.time,
+//                       ingredients: ingredients,
+//                       instructions: recipe.instructions,
+//                       imageData: recipe.imageData))
+//        
+//    }
+//    
+//    return models
+//    
+//}
+//
+//func recipeFromLocalToDB(_ model: [tempRecipe]) -> [Recipes] {
+//    
+//    var models = [Recipes]()
+//    var ingredients = [RecipeIngredients]()
+//    var ingredientsId = [UUID]()
+//    
+//    for recipe in model {
+//        for ingredient in recipe.ingredients {
+//            ingredients.append(RecipeIngredients(ingredient: Ingredients(name: ingredient.ingredient.name), quantity: ""))
+//        }
+//        
+//        let mockCategory = Categories(id: recipe.category?.id ?? UUID(), name: recipe.name)
+//        
+////        models.append(Recipes(id: recipe.id, name: recipe.name, summary: recipe.summary, categoryId: recipe.category?.id ?? UUID(), serving: recipe.serving, time: recipe.time, ingredients: ingredients, instructions: recipe.instructions, imageData: recipe.imageData))
+//    }
+//    
+//    return models
+//    
+//}
+//
+//func ingredientFromDBtoLocal(_ model: [Ingredients]) -> [tempIngredient] {
+//    
+//    var models: [tempIngredient] = []
+//    
+//    for _ingredient in model {
+//        models.append(tempIngredient(id: _ingredient.id, name: _ingredient.name))
+//    }
+//    
+//    return models
+//    
+//}
 
-func recipeFromLocalToDB(_ model: [tempRecipe]) -> [Recipes] {
-    
-    var models = [Recipes]()
-    var ingredients = [RecipeIngredients]()
-    var ingredientsId = [UUID]()
-    
-    for recipe in model {
-        for ingredient in recipe.ingredients {
-            ingredients.append(RecipeIngredients(ingredient: Ingredients(name: ingredient.ingredient.name), quantity: ""))
-        }
-        
-        let mockCategory = Categories(id: recipe.category?.id ?? UUID(), name: recipe.name)
-        
-//        models.append(Recipes(id: recipe.id, name: recipe.name, summary: recipe.summary, categoryId: recipe.category?.id ?? UUID(), serving: recipe.serving, time: recipe.time, ingredients: ingredients, instructions: recipe.instructions, imageData: recipe.imageData))
-    }
-    
-    return models
-    
-}
-
-func ingredientFromDBtoLocal(_ model: [Ingredients]) -> [tempIngredient] {
-    
-    var models: [tempIngredient] = []
-    
-    for _ingredient in model {
-        models.append(tempIngredient(id: _ingredient.id, name: _ingredient.name))
-    }
-    
-    return models
-    
-}
-
-func ingredientFromLocaltoDB(_ model: [tempIngredient]) -> [Ingredients] {
-    
-    var models: [Ingredients] = []
-    
-    for _ingredient in model {
-        models.append(Ingredients(name: _ingredient.name))
-    }
-    
-    return models
-    
-}
+//func ingredientFromLocaltoDB(_ model: [tempIngredient]) -> [Ingredients] {
+//    
+//    var models: [Ingredients] = []
+//    
+//    for _ingredient in model {
+//        models.append(Ingredients(name: _ingredient.name))
+//    }
+//    
+//    return models
+//    
+//}

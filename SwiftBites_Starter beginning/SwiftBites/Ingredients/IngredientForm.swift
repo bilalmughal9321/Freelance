@@ -4,7 +4,7 @@ import SwiftData
 struct IngredientForm: View {
     enum Mode: Hashable {
         case add
-        case edit(tempIngredient)
+        case edit(Ingredients)
     }
     
     var mode: Mode
@@ -69,7 +69,7 @@ struct IngredientForm: View {
     
     // MARK: - Data
     
-    private func delete(ingredient: tempIngredient) {
+    private func delete(ingredient: Ingredients) {
 //        storage.deleteIngredient(id: ingredient.id)
         let storage_db = StorageData(context: context)
         do {

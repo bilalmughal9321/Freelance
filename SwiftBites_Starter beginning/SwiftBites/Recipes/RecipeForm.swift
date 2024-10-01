@@ -45,7 +45,7 @@ struct RecipeForm: View {
     @State private var serving: Int
     @State private var time: Int
     @State private var instructions: String
-    @State private var categoryId: tempCategory.ID?
+//    @State private var categoryId: tempCategory.ID?
     @State private var ingredients: [RecipeIngredients]
     @State private var imageItem: PhotosPickerItem?
     @State private var imageData: Data?
@@ -399,41 +399,41 @@ struct RecipeForm: View {
 
 // MARK: Extensions
 
-extension RecipeForm {
-    
-    private func getCategoryFromId(_ id: UUID?) -> tempCategory{
-        
-        var category = tempCategory()
-        
-        for _category in category_db {
-            if id == _category.ids {
-                category = tempCategory(id: _category.ids, name: _category.name)
-            }
-        }
-        
-//        if let value = category_db.first(where: { $0.id == id }) {
-//            category = MockCategory(id: value.id, name: value.name)
+//extension RecipeForm {
+//    
+//    private func getCategoryFromId(_ id: UUID?) -> tempCategory{
+//        
+//        var category = tempCategory()
+//        
+//        for _category in category_db {
+//            if id == _category.ids {
+//                category = tempCategory(id: _category.ids, name: _category.name)
+//            }
 //        }
-        
-        return category
-    }
-    
-    private func categoryDBtoLocal(_ model: [Categories]) -> [tempCategory]{
-        var array = [tempCategory]()
-        for value in model {
-            array.append(tempCategory(id: value.ids, name: value.name))
-        }
-        return array
-    }
-    
-    private func convertDBtoLocal(_ model: [RecipeIngredients])  -> [tempRecipeIngredient]{
-        var array = [tempRecipeIngredient]()
-        
-        for value in model {
-            array.append(tempRecipeIngredient(ingredient: tempIngredient(name: value.ingredient?.name ?? ""), quantity: ""))
-        }
-        
-        return array
-    }
-    
-}
+//        
+////        if let value = category_db.first(where: { $0.id == id }) {
+////            category = MockCategory(id: value.id, name: value.name)
+////        }
+//        
+//        return category
+//    }
+//    
+//    private func categoryDBtoLocal(_ model: [Categories]) -> [tempCategory]{
+//        var array = [tempCategory]()
+//        for value in model {
+//            array.append(tempCategory(id: value.ids, name: value.name))
+//        }
+//        return array
+//    }
+//    
+//    private func convertDBtoLocal(_ model: [RecipeIngredients])  -> [tempRecipeIngredient]{
+//        var array = [tempRecipeIngredient]()
+//        
+//        for value in model {
+//            array.append(tempRecipeIngredient(ingredient: tempIngredient(name: value.ingredient?.name ?? ""), quantity: ""))
+//        }
+//        
+//        return array
+//    }
+//    
+//}

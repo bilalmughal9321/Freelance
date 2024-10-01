@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct IngredientsView: View {
-    typealias Selection = (tempIngredient) -> Void
+    typealias Selection = (Ingredients) -> Void
     
     let selection: Selection?
     
@@ -18,7 +18,10 @@ struct IngredientsView: View {
     
     @Query var ingredient_db: [Ingredients]
     @Query var recipe_ingredient_db: [RecipeIngredients]
-    @State var ingredient: [tempIngredient] = []
+    
+    @State var filterIngredients: [Ingredients] = []
+    
+//    @State var ingredient: [tempIngredient] = []
     
     // MARK: - Body
     
@@ -27,7 +30,7 @@ struct IngredientsView: View {
             content
                 .navigationTitle("Ingredients")
                 .toolbar {
-                    if !ingredient.isEmpty {
+                    if !filterIngredients.isEmpty {
                         NavigationLink(value: IngredientForm.Mode.add) {
                             Label("Add", systemImage: "plus")
                         }
@@ -49,10 +52,10 @@ struct IngredientsView: View {
     
     @ViewBuilder
     private var content: some View {
-        if ingredient.isEmpty {
+        if filterIngredients.isEmpty {
             empty
         } else {
-            list(for: ingredient)
+            list(for: filterIngredients)
         }
     }
     
@@ -81,7 +84,7 @@ struct IngredientsView: View {
         .listRowSeparator(.hidden)
     }
     
-    private func list(for ingredients: [tempIngredient]) -> some View {
+    private func list(for ingredients: [Ingredients]) -> some View {
         List {
             if ingredients.isEmpty {
                 noResults
@@ -101,7 +104,7 @@ struct IngredientsView: View {
     }
     
     @ViewBuilder
-    private func row(for ingredient: tempIngredient) -> some View {
+    private func row(for ingredient: Ingredients) -> some View {
         if let selection {
             Button(
                 action: {
@@ -119,14 +122,14 @@ struct IngredientsView: View {
         }
     }
     
-    private func title(for ingredient: tempIngredient) -> some View {
+    private func title(for ingredient: Ingredients) -> some View {
         Text(ingredient.name)
             .font(.title3)
     }
     
     // MARK: - Data
     
-    private func delete(ingredient: tempIngredient) {
+    private func delete(ingredient: Ingredients) {
         let storage_db = StorageData(context: context)
         do {
             try storage_db.deleteIngredient(id: ingredient.id)
@@ -138,22 +141,35 @@ struct IngredientsView: View {
     }
     
     private func applyFilter() {
-        // If query is empty, show all recipes
-        if query.isEmpty {
-            ingredient = ingredientFromDBtoLocal(ingredient_db)
-            return
+//        // If query is empty, show all recipes
+//        if query.isEmpty {
+//            ingredient = ingredientFromDBtoLocal(ingredient_db)
+//            return
+//        }
+//
+//        // Create an NSPredicate to filter the SwiftDataRecipe
+//        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
+//
+//        // Filter the original recipes using the predicate
+//        let filteredDBRecipes = ingredient_db.filter { recipe in
+//            // Use only non-nil values for evaluation
+//            return predicate.evaluate(with: ["name": recipe.name])
+//        }
+//
+//        // Convert the filtered results to tempRecipe
+//        ingredient = ingredientFromDBtoLocal(filteredDBRecipes)
+        
+        let predicate = #Predicate<Ingredients> {
+            $0.name.localizedStandardContains (query)
         }
-
-        // Create an NSPredicate to filter the SwiftDataRecipe
-        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
-
-        // Filter the original recipes using the predicate
-        let filteredDBRecipes = ingredient_db.filter { recipe in
-            // Use only non-nil values for evaluation
-            return predicate.evaluate(with: ["name": recipe.name])
+        let descriptor = FetchDescriptor<Ingredients>(predicate: query.isEmpty ? nil : predicate)
+        do {
+            let filterIngredient = try context.fetch(descriptor)
+            filterIngredients = filterIngredient
         }
-
-        // Convert the filtered results to tempRecipe
-        ingredient = ingredientFromDBtoLocal(filteredDBRecipes)
+        catch{
+            filterIngredients = []
+        }
+        
     }
 }
