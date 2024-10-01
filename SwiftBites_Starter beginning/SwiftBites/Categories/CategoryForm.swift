@@ -4,7 +4,7 @@ import SwiftData
 struct CategoryForm: View {
     enum Mode: Hashable {
         case add
-        case edit(tempCategory)
+        case edit(Categories)
     }
     
     var mode: Mode
@@ -70,12 +70,12 @@ struct CategoryForm: View {
     
     // MARK: - Data
     
-    private func delete(category: tempCategory) {
+    private func delete(category: Categories) {
         
         let storage_db = StorageData(context: context)
         
         do {
-            try storage_db.deleteCategoy(id: category.id)
+            try storage_db.deleteCategoy(id: category.ids)
             dismiss()
         }
         catch {
@@ -96,7 +96,7 @@ struct CategoryForm: View {
                 dismiss()
             case .edit(let category):
 //                try storage.updateCategory(id: category.id, name: name)
-                try storage_db.updateCategory(id: category.id, newName: name)
+                try storage_db.updateCategory(id: category.ids, newName: name)
                 dismiss()
             }
             

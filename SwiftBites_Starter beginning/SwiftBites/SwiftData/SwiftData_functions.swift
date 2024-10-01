@@ -15,6 +15,7 @@ final class StorageData {
         case categoryExists
         case recipeExists
         case noRecipe
+        case noCategory
         
         var errorDescription: String? {
             switch self {
@@ -26,6 +27,8 @@ final class StorageData {
                 return "Recipe with the same name exists"
             case .noRecipe:
                 return "No recipe with given id found"
+            case .noCategory:
+                return "No category with given id found"
             }
         }
     }
@@ -121,14 +124,7 @@ final class StorageData {
     
     // MARK: - Recipe
     
-    func addRecipe(name: String,
-                   summary: String,
-                   category: Categories?,
-                   serving: Int,
-                   time: Int,
-                   ingredients: [RecipeIngredients],
-                   instructions: String,
-                   imageData: Data?) throws {
+    func addRecipe(Recipe: Recipes, name: String) throws {
         
         let fetchDescriptor = FetchDescriptor<Recipes>(
             predicate: #Predicate { $0.name == name }
@@ -142,16 +138,7 @@ final class StorageData {
             throw StorageError.ingredientExists
         }
         
-        // If no ingredient exists, insert the new one
-        let ingredient = Recipes(name: name,
-                                     summary: summary,
-                                     category: category,
-                                     serving: serving,
-                                     time: time,
-                                     ingredients: ingredients,
-                                     instructions: instructions,
-                                     imageData: imageData)
-        context.insert(ingredient)
+        context.insert(Recipe)
         
         // Save the context
         try context.save()
@@ -300,6 +287,88 @@ final class StorageData {
         // Save the changes
         try context.save()
         
+    }
+    
+    func getCategoryById(id: UUID) -> Categories? {
+        let fetchDescriptor = FetchDescriptor<Categories>(
+            predicate: #Predicate { $0.ids == id }
+        )
+        if let category = try? context.fetch(fetchDescriptor).first {
+            return category
+        }
+        
+        return nil
+    }
+    
+    
+    func removeRecipeFromCategories(recipeId: UUID) throws {
+        // Fetch all categories
+        let fetchCategoriesDescriptor = FetchDescriptor<Categories>()
+        
+        // Fetch all categories from the context
+        let categories = try? context.fetch(fetchCategoriesDescriptor)
+        
+        // If there are no categories, just return (nothing to remove)
+        guard let allCategories = categories else {
+            throw StorageError.noCategory
+        }
+        
+        // Iterate through all categories to find where the recipe exists
+        for category in allCategories {
+            // Check if this category has any recipes
+            if let recipes = category.recipes {
+                // Find the recipe by its id and remove it
+                if let index = recipes.firstIndex(where: { $0.id == recipeId }) {
+                    category.recipes?.remove(at: index)
+                    
+                    // You could break here if you're sure the recipe exists in only one category
+                    // or continue if it might exist in multiple categories
+                }
+            }
+        }
+        
+        // Save the context to persist the changes
+        try context.save()
+    }
+    
+    func appendRecipeToCategory(categoryId: UUID, recipe: Recipes) throws {
+        // Fetch the category by its UUID
+        let fetchCategoryDescriptor = FetchDescriptor<Categories>(
+            predicate: #Predicate { $0.ids == categoryId }
+        )
+        
+        // Fetch the category with the given id
+        guard let category = try? context.fetch(fetchCategoryDescriptor).first else {
+            throw StorageError.noCategory // No category with the given ID was found
+        }
+        
+        // If the category doesn't have any recipes array, initialize it
+        if category.recipes == nil {
+            category.recipes = [Recipes]()
+        }
+        
+        // Append the new recipe to the category's recipes array
+        category.recipes?.append(recipe)
+        
+        // Save the changes
+        try context.save()
+    }
+
+    
+    func fetchOrCreateIngredientInCurrentContext(_ id: UUID, ingredient: RecipeIngredients) -> RecipeIngredients {
+        // Create the predicate to fetch the ingredient by its ID
+        let fetchDescriptor = FetchDescriptor<RecipeIngredients>(
+            predicate: #Predicate { $0.id == id } // Correct usage of Predicate
+        )
+
+        // Try fetching the ingredient in the current context
+        if let fetchedIngredient = try? context.fetch(fetchDescriptor).first {
+            return fetchedIngredient
+        } else {
+            // If not found, create a new ingredient in the current context
+            let newIngredient = RecipeIngredients(ingredient: ingredient.ingredient, quantity: ingredient.quantity)
+            return newIngredient
+        }
     }
     
 }

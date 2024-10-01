@@ -55,7 +55,7 @@ final class Recipes {
     var category: Categories?
     var serving: Int
     var time: Int
-    var ingredients: [RecipeIngredients]
+    @Relationship var ingredients: [RecipeIngredients]
     var instructions: String
     var imageData: Data?
     

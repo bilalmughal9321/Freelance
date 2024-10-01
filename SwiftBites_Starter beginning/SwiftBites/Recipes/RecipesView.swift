@@ -2,15 +2,15 @@ import SwiftUI
 import SwiftData
 
 struct RecipesView: View {
-//    @Environment(\.storage) private var storage
+    @Environment(\.modelContext) private var context
     @State private var query = ""
-    @State private var sortOrder = SortDescriptor(\tempRecipe.name)
+    @State private var sortOrder = SortDescriptor(\Recipes.name)
     
     @Query var cat:             [Categories]
     @Query var recipe_db:       [Recipes]
     @State var recipe:          [tempRecipe] = []
     
-    @State private var filteredRecipes: [tempRecipe] = []
+    @State private var filteredRecipes: [Recipes] = []
         
     // MARK: - Body
     
@@ -33,13 +33,13 @@ struct RecipesView: View {
                     RecipeForm(mode: mode)
                 }
                 .onAppear {
-                    applyFilter()
+                    filteredRecipes = applyFilter()
 //                    filteredRecipes = recipe_db
 //                    recipe = recipeFromDBtoLocal(recipe_db)
 //                    print(recipe)
                 }
                 .onChange(of: query) {
-                    applyFilter()
+                    filteredRecipes = applyFilter()
                 }
         }
     }
@@ -52,19 +52,19 @@ struct RecipesView: View {
             Menu("Sort", systemImage: "arrow.up.arrow.down") {
                 Picker("Sort", selection: $sortOrder) {
                     Text("Name")
-                        .tag(SortDescriptor(\tempRecipe.name))
+                        .tag(SortDescriptor(\Recipes.name))
                     
                     Text("Serving (low to high)")
-                        .tag(SortDescriptor(\tempRecipe.serving, order: .forward))
+                        .tag(SortDescriptor(\Recipes.serving, order: .forward))
                     
                     Text("Serving (high to low)")
-                        .tag(SortDescriptor(\tempRecipe.serving, order: .reverse))
+                        .tag(SortDescriptor(\Recipes.serving, order: .reverse))
                     
                     Text("Time (short to long)")
-                        .tag(SortDescriptor(\tempRecipe.time, order: .forward))
+                        .tag(SortDescriptor(\Recipes.time, order: .forward))
                     
                     Text("Time (long to short)")
-                        .tag(SortDescriptor(\tempRecipe.time, order: .reverse))
+                        .tag(SortDescriptor(\Recipes.time, order: .reverse))
                 }
             }
             .pickerStyle(.inline)
@@ -104,7 +104,7 @@ struct RecipesView: View {
         )
     }
     
-    private func list(for recipes: [tempRecipe]) -> some View {
+    private func list(for recipes: [Recipes]) -> some View {
         ScrollView(.vertical) {
             if recipes.isEmpty {
                 noResults
@@ -155,24 +155,36 @@ struct RecipesView: View {
 //        }
 //    }
     
-    private func applyFilter() {
-        // If query is empty, show all recipes
-        if query.isEmpty {
-            filteredRecipes = recipeFromDBtoLocal(recipe_db)
-            return
+    private func applyFilter() -> [Recipes]{
+//        // If query is empty, show all recipes
+//        if query.isEmpty {
+//            filteredRecipes = recipeFromDBtoLocal(recipe_db)
+//            return
+//        }
+//
+//        // Create an NSPredicate to filter the Recipes
+//        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
+//
+//        // Filter the original recipes using the predicate
+//        let filteredDBRecipes = recipe_db.filter { recipe in
+//            // Use only non-nil values for evaluation
+//            return predicate.evaluate(with: ["name": recipe.name, "summary": recipe.summary])
+//        }
+//
+//        // Convert the filtered results to tempRecipe
+//        filteredRecipes = recipeFromDBtoLocal(filteredDBRecipes)
+        
+        let predicate = #Predicate<Recipes> {
+            $0.name.localizedStandardContains (query)
         }
-
-        // Create an NSPredicate to filter the Recipes
-        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
-
-        // Filter the original recipes using the predicate
-        let filteredDBRecipes = recipe_db.filter { recipe in
-            // Use only non-nil values for evaluation
-            return predicate.evaluate(with: ["name": recipe.name, "summary": recipe.summary])
+        let descriptor = FetchDescriptor<Recipes>(predicate: query.isEmpty ? nil : predicate)
+        do {
+            let filteredRecipes = try context.fetch(descriptor)
+            return filteredRecipes
         }
-
-        // Convert the filtered results to tempRecipe
-        filteredRecipes = recipeFromDBtoLocal(filteredDBRecipes)
+        catch{
+            return []
+        }
     }
     
 }

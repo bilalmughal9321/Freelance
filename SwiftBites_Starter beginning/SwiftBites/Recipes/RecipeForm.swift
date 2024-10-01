@@ -6,7 +6,7 @@ import SwiftData
 struct RecipeForm: View {
     enum Mode: Hashable {
         case add
-        case edit(tempRecipe)
+        case edit(Recipes)
     }
     
     var mode: Mode
@@ -30,10 +30,11 @@ struct RecipeForm: View {
             _time = .init(initialValue: recipe.time)
             _instructions = .init(initialValue: recipe.instructions)
             _ingredients = .init(initialValue: recipe.ingredients)
-            _categoryId = .init(initialValue: recipe.category?.id)
+//            _categoryId = .init(initialValue: recipe.category?.id)
             _imageData = .init(initialValue: recipe.imageData)
             
             selectedRecipe = recipe
+            selectedRecipeIngredient = recipe.ingredients
             
         }
     }
@@ -45,7 +46,7 @@ struct RecipeForm: View {
     @State private var time: Int
     @State private var instructions: String
     @State private var categoryId: tempCategory.ID?
-    @State private var ingredients: [tempRecipeIngredient]
+    @State private var ingredients: [RecipeIngredients]
     @State private var imageItem: PhotosPickerItem?
     @State private var imageData: Data?
     @State private var isIngredientsPickerPresented =  false
@@ -59,9 +60,10 @@ struct RecipeForm: View {
     @Query var category_db: [Categories] = []
     
     /// State variable
-    @State var category: [tempCategory] = []
-    @State var selectedCategry: tempCategory? = nil
-    var selectedRecipe: tempRecipe? = nil
+//    @State var category: [tempCategory] = []
+    @State var selectedCategry: Categories? = nil
+    var selectedRecipe: Recipes? = nil
+    @State var selectedRecipeIngredient: [RecipeIngredients] = []
     
     // MARK: - Body
     
@@ -95,9 +97,10 @@ struct RecipeForm: View {
         }
         .sheet(isPresented: $isIngredientsPickerPresented, content: ingredientPicker)
         .onAppear {
-            category = categoryDBtoLocal(category_db)
+            let storage_db = StorageData(context: context)
+//            category = categoryDBtoLocal(category_db)
             if mode != .add {
-                selectedCategry = getCategoryFromId(selectedRecipe?.category?.id)
+                selectedCategry = storage_db.getCategoryById(id: selectedRecipe?.category?.ids ?? UUID())
             }
         }
     }
@@ -107,8 +110,16 @@ struct RecipeForm: View {
     
     private func ingredientPicker() -> some View {
         IngredientsView { selectedIngredient in
-            let recipeIngredient = tempRecipeIngredient(ingredient: selectedIngredient, quantity: "")
-            ingredients.append(recipeIngredient)
+            let storage = StorageData(context: context)
+            let existingIngredient = storage.findOrCreateIngredient(name: selectedIngredient.name)
+            if selectedRecipe?.ingredients.count == 0 {
+                selectedRecipe?.ingredients.append(RecipeIngredients(ingredient: existingIngredient, quantity: ""))
+            }
+            else {
+                if selectedRecipe?.ingredients.first(where: { $0.ingredient?.name == existingIngredient.name }) == nil {
+                    selectedRecipe?.ingredients.append(RecipeIngredients(ingredient: existingIngredient, quantity: ""))
+                }
+            }
         }
     }
     
@@ -176,14 +187,14 @@ struct RecipeForm: View {
     private var categorySection: some View {
         Section {
             Picker("Category", selection: $selectedCategry) {
-                Text("None").tag(tempCategory?.none)
-                ForEach(category) { category in
-                    Text(category.name).tag(category as tempCategory?)
+                Text("None").tag(Categories?.none)
+                ForEach(category_db) { category in
+                    Text(category.name).tag(category as Categories?)
                 }
             }
-            .onChange(of: selectedCategry, perform: { value in
-                print(value)
-            })
+            .onChange(of: selectedCategry){
+                print(selectedCategry)
+            }
         }
     }
     
@@ -199,7 +210,7 @@ struct RecipeForm: View {
     @ViewBuilder
     private var ingredientsSection: some View {
         Section("Ingredients") {
-            if ingredients.isEmpty {
+            if selectedRecipe?.ingredients.count == 0 {
                 ContentUnavailableView(
                     label: {
                         Label("No Ingredients", systemImage: "list.clipboard")
@@ -214,9 +225,9 @@ struct RecipeForm: View {
                     }
                 )
             } else {
-                ForEach(ingredients) { ingredient in
+                ForEach(selectedRecipe?.ingredients ?? []) { ingredient in
                     HStack(alignment: .center) {
-                        Text(ingredient.ingredient.name)
+                        Text(ingredient.ingredient?.name ?? "")
                             .bold()
                             .layoutPriority(2)
                         Spacer()
@@ -225,14 +236,15 @@ struct RecipeForm: View {
                                 ingredient.quantity
                             },
                             set: { quantity in
-                                if let index = ingredients.firstIndex(where: { $0.id == ingredient.id }) {
-                                    ingredients[index].quantity = quantity
+                                if let index = selectedRecipe?.ingredients.firstIndex(where: { $0.id == ingredient.id }) {
+                                    selectedRecipe?.ingredients[index].quantity = quantity
                                 }
                             }
                         ))
                         .layoutPriority(1)
                     }
                 }
+               
                 .onDelete(perform: deleteIngredients)
                 
                 Button("Add Ingredient") {
@@ -276,7 +288,7 @@ struct RecipeForm: View {
     
     // MARK: - Data
     
-    func delete(recipe: tempRecipe) {
+    func delete(recipe: Recipes) {
         let storage_db = StorageData(context: context)
         guard case .edit(let recipe) = mode else {
             fatalError("Delete unavailable in add mode")
@@ -293,7 +305,7 @@ struct RecipeForm: View {
     
     func deleteIngredients(offsets: IndexSet) {
         withAnimation {
-            ingredients.remove(atOffsets: offsets)
+            selectedRecipe?.ingredients.remove(atOffsets: offsets)
         }
     }
     
@@ -301,64 +313,80 @@ struct RecipeForm: View {
         
         let db_storage = StorageData(context: context)
         
-//        let category = storage.categories.first(where: { $0.id == categoryId })
-        var ingredients_temp: [RecipeIngredients] = []
-        
-        var category_temp: Categories? = nil
-        
-        for _recipe in ingredients {
-            let existingIngredient = db_storage.findOrCreateIngredient(name: _recipe.ingredient.name)
-            ingredients_temp.append(RecipeIngredients(ingredient: existingIngredient, quantity: _recipe.quantity))
-        }
-        
-        for value in category_db {
-            if selectedCategry?.id == value.ids {
-                category_temp = value
-            }
-        }
-        
-        
-        
         
             switch mode {
             case .add:
                 
+                let recipe = Recipes(name: name,
+                                     summary: summary,
+                                     category: selectedCategry,
+                                     serving: serving,
+                                     time: time,
+                                     ingredients: selectedRecipe?.ingredients ?? [],
+                                     instructions: instructions,
+                                     imageData: imageData)
+                
                 do{
-                    try db_storage.addRecipe(
-                        name: name,
-                        summary: summary,
-                        category: category_temp,
-                        serving: serving,
-                        time: time,
-                        ingredients: ingredients_temp,
-                        instructions: instructions,
-                        imageData: imageData)
+                    try db_storage.addRecipe(Recipe: recipe, name: name)
+                    
+                    if selectedCategry != nil {
+                        // add recipe into category
+                        try db_storage.appendRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(), recipe: recipe)
+                    }
+                    
+                    
                 }
                 catch {
                     self.error = error
                 }
             case .edit(let recipe):
                 
+                print(selectedRecipeIngredient)
+                
                 do {
                     try db_storage.updateRecipe(
                         id: recipe.id,
                         newName: name,
                         newSummary: summary,
-                        newCategory: category_temp,
+                        newCategory: selectedCategry,
                         newServing: serving,
                         newTime: time,
-                        newIngredients: ingredients_temp,
+                        newIngredients: selectedRecipe?.ingredients ?? [],
                         newInstructions: instructions,
                         newImageData: imageData
                     )
+                    
+                    // remove this recipe from all the categories first
+                    try db_storage.removeRecipeFromCategories(recipeId: recipe.id)
+                    
+                    // add recipe into category
+                    if selectedCategry != nil {
+                        
+                        let ingredientsInCorrectContext = selectedRecipe?.ingredients.map { ingredient in
+                            db_storage.fetchOrCreateIngredientInCurrentContext(ingredient.id, ingredient: ingredient)
+                        } ?? []
+                        
+                        
+                        try db_storage.appendRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(),
+                                                              recipe: Recipes(id: recipe.id,
+                                                                              name: name,
+                                                                              summary: summary,
+                                                                              category: selectedCategry,
+                                                                              serving: serving,
+                                                                              time: time,
+                                                                              ingredients: [],
+                                                                              instructions: instructions,
+                                                                              imageData: imageData))
+                    }
+                    
                 }
                 catch {
                     self.error = error
                 }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
+//            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
                 dismiss()
-            })
+//            })
             
 //        }
 //        catch {
