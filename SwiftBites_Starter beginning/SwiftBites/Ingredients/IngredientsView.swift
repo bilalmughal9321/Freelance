@@ -36,6 +36,7 @@ struct IngredientsView: View {
                         }
                     }
                 }
+                .searchable(text: $query)
                 .navigationDestination(for: IngredientForm.Mode.self) { mode in
                     IngredientForm(mode: mode)
                 }
@@ -43,6 +44,9 @@ struct IngredientsView: View {
                     applyFilter()
                 }
                 .onChange(of: query) {
+                    applyFilter()
+                }
+                .onChange(of: ingredient_db) {
                     applyFilter()
                 }
         }
@@ -99,7 +103,6 @@ struct IngredientsView: View {
                 }
             }
         }
-        .searchable(text: $query)
         .listStyle(.plain)
     }
     

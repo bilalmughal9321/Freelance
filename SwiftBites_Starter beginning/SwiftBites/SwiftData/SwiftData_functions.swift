@@ -366,7 +366,7 @@ final class StorageData {
             return fetchedIngredient
         } else {
             // If not found, create a new ingredient in the current context
-            let newIngredient = RecipeIngredients(ingredient: ingredient.ingredient, quantity: ingredient.quantity)
+            let newIngredient = RecipeIngredients(ingredient: ingredient.ingredient!, quantity: ingredient.quantity)
             return newIngredient
         }
     }

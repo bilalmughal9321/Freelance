@@ -22,6 +22,18 @@ struct RecipeForm: View {
             _time = .init(initialValue: 5)
             _instructions = .init(initialValue: "")
             _ingredients = .init(initialValue: [])
+            _selectedRecipeIngredient = .init(initialValue: [])
+            
+//            selectedRecipe = Recipes(ingredients: [])
+            selectedRecipe = Recipes(name: "",
+                                     summary: "",
+                                     category: nil,
+                                     serving: 1,
+                                     time: 5,
+                                     ingredients: [],
+                                     instructions: "",
+                                     imageData: nil)
+            
         case .edit(let recipe):
             title = "Edit \(recipe.name)"
             _name = .init(initialValue: recipe.name)
@@ -34,7 +46,7 @@ struct RecipeForm: View {
             _imageData = .init(initialValue: recipe.imageData)
             
             selectedRecipe = recipe
-            selectedRecipeIngredient = recipe.ingredients
+//            selectedRecipeIngredient = recipe.ingredients
             
         }
     }
@@ -112,14 +124,22 @@ struct RecipeForm: View {
         IngredientsView { selectedIngredient in
             let storage = StorageData(context: context)
             let existingIngredient = storage.findOrCreateIngredient(name: selectedIngredient.name)
-            if selectedRecipe?.ingredients.count == 0 {
-                selectedRecipe?.ingredients.append(RecipeIngredients(ingredient: existingIngredient, quantity: ""))
-            }
-            else {
+            
+            if mode == .add {
+                if selectedRecipeIngredient.first(where: { $0.ingredient?.name == existingIngredient.name }) == nil {
+                    let ingredientss = Ingredients(name: existingIngredient.name)
+                    let value = RecipeIngredients(ingredient: nil, quantity: "")
+                    value.ingredient = existingIngredient
+                    selectedRecipeIngredient.append(value)
+                    print("")
+                }
+                
+            } else {
                 if selectedRecipe?.ingredients.first(where: { $0.ingredient?.name == existingIngredient.name }) == nil {
                     selectedRecipe?.ingredients.append(RecipeIngredients(ingredient: existingIngredient, quantity: ""))
                 }
             }
+            
         }
     }
     
@@ -210,7 +230,10 @@ struct RecipeForm: View {
     @ViewBuilder
     private var ingredientsSection: some View {
         Section("Ingredients") {
-            if selectedRecipe?.ingredients.count == 0 {
+            
+            let ingredientsList = mode == .add ? selectedRecipeIngredient : selectedRecipe?.ingredients ?? []
+            
+            if ingredientsList.isEmpty {
                 ContentUnavailableView(
                     label: {
                         Label("No Ingredients", systemImage: "list.clipboard")
@@ -225,7 +248,7 @@ struct RecipeForm: View {
                     }
                 )
             } else {
-                ForEach(selectedRecipe?.ingredients ?? []) { ingredient in
+                ForEach(ingredientsList) { ingredient in
                     HStack(alignment: .center) {
                         Text(ingredient.ingredient?.name ?? "")
                             .bold()
@@ -236,8 +259,12 @@ struct RecipeForm: View {
                                 ingredient.quantity
                             },
                             set: { quantity in
-                                if let index = selectedRecipe?.ingredients.firstIndex(where: { $0.id == ingredient.id }) {
-                                    selectedRecipe?.ingredients[index].quantity = quantity
+                                if let index = ingredientsList.firstIndex(where: { $0.id == ingredient.id }) {
+                                    if mode == .add {
+                                        selectedRecipeIngredient[index].quantity = quantity
+                                    } else {
+                                        selectedRecipe?.ingredients[index].quantity = quantity
+                                    }
                                 }
                             }
                         ))
@@ -309,11 +336,27 @@ struct RecipeForm: View {
         }
     }
     
+    
+    
     func save() {
         
         let db_storage = StorageData(context: context)
         
+        let s = selectedRecipeIngredient.map { ingredient in
+            return db_storage.fetchOrCreateIngredientInCurrentContext(ingredient.id, ingredient: ingredient)
+        }
         
+        let ingredientsList: [RecipeIngredients] = selectedRecipeIngredient.compactMap { recipeIngredient in
+            // Ensure there's an ingredient associated with the RecipeIngredients
+            guard let ingredient = recipeIngredient.ingredient else { return nil }
+            
+            // Fetch or create the ingredient in the current context using its name
+            let existingIngredient = db_storage.findOrCreateIngredient(name: ingredient.name)
+            
+            // Return a new RecipeIngredients instance with the fetched or created ingredient
+            return RecipeIngredients(ingredient: existingIngredient, quantity: recipeIngredient.quantity)
+        }
+                
             switch mode {
             case .add:
                 
@@ -322,7 +365,7 @@ struct RecipeForm: View {
                                      category: selectedCategry,
                                      serving: serving,
                                      time: time,
-                                     ingredients: selectedRecipe?.ingredients ?? [],
+                                     ingredients: ingredientsList,
                                      instructions: instructions,
                                      imageData: imageData)
                 
@@ -394,46 +437,25 @@ struct RecipeForm: View {
 //        }
     }
     
+    
+    func addRecipe(name: String, summary: String, category: Categories?, serving: Int, time: Int, ingredients: [Ingredients], instructions: String, imageData: Data?) -> Recipes {
+        // Create RecipeIngredients instances from the provided ingredients
+        let recipeIngredients = ingredients.map { RecipeIngredients(ingredient: $0, quantity: "") }
+        
+        // Create a new recipe instance
+        let newRecipe = Recipes(
+            name: name,
+            summary: summary,
+            category: category,
+            serving: serving,
+            time: time,
+            ingredients: recipeIngredients, // Assign the created RecipeIngredients array
+            instructions: instructions,
+            imageData: imageData
+        )
+        
+        return newRecipe
+    }
+    
    
 }
-
-// MARK: Extensions
-
-//extension RecipeForm {
-//    
-//    private func getCategoryFromId(_ id: UUID?) -> tempCategory{
-//        
-//        var category = tempCategory()
-//        
-//        for _category in category_db {
-//            if id == _category.ids {
-//                category = tempCategory(id: _category.ids, name: _category.name)
-//            }
-//        }
-//        
-////        if let value = category_db.first(where: { $0.id == id }) {
-////            category = MockCategory(id: value.id, name: value.name)
-////        }
-//        
-//        return category
-//    }
-//    
-//    private func categoryDBtoLocal(_ model: [Categories]) -> [tempCategory]{
-//        var array = [tempCategory]()
-//        for value in model {
-//            array.append(tempCategory(id: value.ids, name: value.name))
-//        }
-//        return array
-//    }
-//    
-//    private func convertDBtoLocal(_ model: [RecipeIngredients])  -> [tempRecipeIngredient]{
-//        var array = [tempRecipeIngredient]()
-//        
-//        for value in model {
-//            array.append(tempRecipeIngredient(ingredient: tempIngredient(name: value.ingredient?.name ?? ""), quantity: ""))
-//        }
-//        
-//        return array
-//    }
-//    
-//}

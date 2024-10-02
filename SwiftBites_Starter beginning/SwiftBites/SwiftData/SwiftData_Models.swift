@@ -27,23 +27,25 @@ final class Ingredients {
     var id: UUID
     @Attribute(.unique) var name: String
 
-    init(name: String) {
+    
+    
+    init(name: String? = "") {
         self.id = UUID()
-        self.name = name
+        self.name = name ?? ""
     }
 }
 
 @Model
 final class RecipeIngredients {
-    let id = UUID()
+    let id: UUID
     var ingredient: Ingredients?
     var quantity: String
     
-    init(ingredient: Ingredients? = nil, quantity: String) {
+    init(id: UUID = UUID(), ingredient: Ingredients? = Ingredients(), quantity: String) {
+        self.id = id
         self.ingredient = ingredient
         self.quantity = quantity
     }
-    
 }
 
 
@@ -55,7 +57,7 @@ final class Recipes {
     var category: Categories?
     var serving: Int
     var time: Int
-    @Relationship var ingredients: [RecipeIngredients]
+    var ingredients: [RecipeIngredients] = []
     var instructions: String
     var imageData: Data?
     

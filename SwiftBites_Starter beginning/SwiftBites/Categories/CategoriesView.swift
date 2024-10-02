@@ -10,7 +10,7 @@ struct CategoriesView: View {
     @Query var category_db: [Categories]
     @Query var recipe_db: [Recipes]
     
-    @State private var filteredCategory: [Categories] = []
+    @State var filteredCategory: [Categories] = []
     
     
     // MARK: - Body
@@ -39,20 +39,23 @@ struct CategoriesView: View {
                 .onChange(of: query) {
                     applyFilter()
                 }
+                .onChange(of: category_db) {
+                    applyFilter() // Apply filter whenever category_db changes
+                }
         }
         
     }
     
     // MARK: - Views
     
-    @ViewBuilder
-    private var content: some View {
-        if category_db.isEmpty {
-            empty
-        } else {
-            list(for: category_db)
+        @ViewBuilder
+        private var content: some View {
+            if filteredCategory.isEmpty {
+                empty
+            } else {
+                list(for: filteredCategory)
+            }
         }
-    }
     
     private var empty: some View {
         ContentUnavailableView(
@@ -156,6 +159,8 @@ struct CategoriesView: View {
         do {
             let filteredRecipes = try context.fetch(descriptor)
             filteredCategory = filteredRecipes
+            
+            print("filtered category: \(filteredRecipes.first?.recipes)")
         }
         catch{
             filteredCategory = []

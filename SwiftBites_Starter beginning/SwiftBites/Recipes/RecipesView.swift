@@ -8,7 +8,6 @@ struct RecipesView: View {
     
     @Query var cat:             [Categories]
     @Query var recipe_db:       [Recipes]
-//    @State var recipe:          [tempRecipe] = []
     
     @State private var filteredRecipes: [Recipes] = []
         
@@ -33,13 +32,13 @@ struct RecipesView: View {
                     RecipeForm(mode: mode)
                 }
                 .onAppear {
-                    filteredRecipes = applyFilter()
-//                    filteredRecipes = recipe_db
-//                    recipe = recipeFromDBtoLocal(recipe_db)
-//                    print(recipe)
+                    applyFilter()
                 }
                 .onChange(of: query) {
-                    filteredRecipes = applyFilter()
+                    applyFilter()
+                }
+                .onChange(of: recipe_db) {
+                    applyFilter()
                 }
         }
     }
@@ -117,73 +116,17 @@ struct RecipesView: View {
         
     }
     
-//    // Function to apply filtering
-//    private func applyFilter() {
-//        if query.isEmpty {
-//            filteredRecipes = recipe_db // If the query is empty, show all
-//        } else {
-//            // Filter the recipes based on the search query
-//            filteredRecipes = recipe_db.filter {
-//                $0.name.localizedStandardContains(query) || $0.summary.localizedStandardContains(query)
-//            }
-//        }
-//        applySorting()
-//    }
-//    
-//    // Function to apply sorting after filtering
-//    private func applySorting() {
-////        filteredRecipes.sort(using: [sortOrder])
-//    }
-    
-    // Load initial recipes
-    private func loadRecipes() {
-        // Convert the database entries to local recipes
-//        recipes = recipeFromDBtoLocal(recipe_db)
-//        filteredRecipes = recipes // Initially set filteredRecipes to all recipes
-    }
-    
-    // Function to apply filtering
-//    private func applyFilter() {
-//        if query.isEmpty {
-//            filteredRecipes = recipes // Show all if query is empty
-//        } else {
-//            // Filter based on query
-//            filteredRecipes = recipes.filter {
-//                $0.name.localizedCaseInsensitiveContains(query) ||
-//                $0.summary.localizedCaseInsensitiveContains(query)
-//            }
-//        }
-//    }
-    
-    private func applyFilter() -> [Recipes]{
-//        // If query is empty, show all recipes
-//        if query.isEmpty {
-//            filteredRecipes = recipeFromDBtoLocal(recipe_db)
-//            return
-//        }
-//
-//        // Create an NSPredicate to filter the Recipes
-//        let predicate = NSPredicate(format: "name CONTAINS[cd] %@ OR summary CONTAINS[cd] %@", query, query)
-//
-//        // Filter the original recipes using the predicate
-//        let filteredDBRecipes = recipe_db.filter { recipe in
-//            // Use only non-nil values for evaluation
-//            return predicate.evaluate(with: ["name": recipe.name, "summary": recipe.summary])
-//        }
-//
-//        // Convert the filtered results to tempRecipe
-//        filteredRecipes = recipeFromDBtoLocal(filteredDBRecipes)
-        
+    private func applyFilter() {
         let predicate = #Predicate<Recipes> {
             $0.name.localizedStandardContains (query)
         }
         let descriptor = FetchDescriptor<Recipes>(predicate: query.isEmpty ? nil : predicate)
         do {
-            let filteredRecipes = try context.fetch(descriptor)
-            return filteredRecipes
+            let filteredRecipe = try context.fetch(descriptor)
+            filteredRecipes = filteredRecipe
         }
         catch{
-            return []
+            filteredRecipes = []
         }
     }
     
