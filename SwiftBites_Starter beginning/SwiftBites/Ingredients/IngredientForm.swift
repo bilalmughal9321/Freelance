@@ -71,9 +71,9 @@ struct IngredientForm: View {
     
     private func delete(ingredient: Ingredients) {
 //        storage.deleteIngredient(id: ingredient.id)
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         do {
-            try storage_db.deleteIngredient(id: ingredient.id)
+            try manager.removeIngredient(id: ingredient.id)
         }
         catch {
             print("error in deleting ingredient")
@@ -83,13 +83,13 @@ struct IngredientForm: View {
     }
     
     private func save() {
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         do {
             switch mode {
             case .add:
-                try storage_db.addIngredient(name: name)
+                try manager.insertIngredient(name: name)
             case .edit(let ingredient):
-                try storage_db.updateIngredient(id: ingredient.id, newName: name)
+                try manager.modifyIngredient(id: ingredient.id, newName: name)
             }
             dismiss()
         } catch {

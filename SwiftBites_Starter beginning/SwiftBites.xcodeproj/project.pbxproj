@@ -21,8 +21,8 @@
 		07CF2F372B0A39FE003B83AD /* RecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CF2F362B0A39FE003B83AD /* RecipeCell.swift */; };
 		07F6DE3F2B04321F004AD929 /* IngredientForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F6DE3E2B04321F004AD929 /* IngredientForm.swift */; };
 		9C0177912CA5FD3400417730 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9C0177902CA5FD3400417730 /* README.md */; };
-		9C6F5C062CA54391008135FD /* SwiftData_Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6F5C052CA54391008135FD /* SwiftData_Models.swift */; };
-		9C6F5C082CA5439F008135FD /* SwiftData_functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6F5C072CA5439F008135FD /* SwiftData_functions.swift */; };
+		9C6F5C062CA54391008135FD /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6F5C052CA54391008135FD /* Models.swift */; };
+		9C6F5C082CA5439F008135FD /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C6F5C072CA5439F008135FD /* Methods.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +41,8 @@
 		07CF2F362B0A39FE003B83AD /* RecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCell.swift; sourceTree = "<group>"; };
 		07F6DE3E2B04321F004AD929 /* IngredientForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientForm.swift; sourceTree = "<group>"; };
 		9C0177902CA5FD3400417730 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		9C6F5C052CA54391008135FD /* SwiftData_Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftData_Models.swift; sourceTree = "<group>"; };
-		9C6F5C072CA5439F008135FD /* SwiftData_functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftData_functions.swift; sourceTree = "<group>"; };
+		9C6F5C052CA54391008135FD /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		9C6F5C072CA5439F008135FD /* Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				9C0177902CA5FD3400417730 /* README.md */,
-				9C6F5C042CA54383008135FD /* SwiftData */,
+				9C6F5C052CA54391008135FD /* Models.swift */,
+				9C6F5C072CA5439F008135FD /* Methods.swift */,
 				07A2073B2AFAF5100048B7EA /* App.swift */,
 				07A2073D2AFAF5100048B7EA /* Main.swift */,
 				0719D4252B058E1800B1A4E3 /* Categories */,
@@ -124,15 +125,6 @@
 				078C79692B015772009744FD /* IngredientsView.swift */,
 			);
 			path = Ingredients;
-			sourceTree = "<group>";
-		};
-		9C6F5C042CA54383008135FD /* SwiftData */ = {
-			isa = PBXGroup;
-			children = (
-				9C6F5C052CA54391008135FD /* SwiftData_Models.swift */,
-				9C6F5C072CA5439F008135FD /* SwiftData_functions.swift */,
-			);
-			path = SwiftData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,12 +200,12 @@
 			files = (
 				0719D42F2B058E8D00B1A4E3 /* CategoryForm.swift in Sources */,
 				07A2073E2AFAF5100048B7EA /* Main.swift in Sources */,
-				9C6F5C082CA5439F008135FD /* SwiftData_functions.swift in Sources */,
+				9C6F5C082CA5439F008135FD /* Methods.swift in Sources */,
 				07CF2F372B0A39FE003B83AD /* RecipeCell.swift in Sources */,
 				0719D4342B0590B500B1A4E3 /* RecipesView.swift in Sources */,
 				07CF2F332B0A1D4C003B83AD /* Utils.swift in Sources */,
 				07F6DE3F2B04321F004AD929 /* IngredientForm.swift in Sources */,
-				9C6F5C062CA54391008135FD /* SwiftData_Models.swift in Sources */,
+				9C6F5C062CA54391008135FD /* Models.swift in Sources */,
 				0719D42D2B058E8D00B1A4E3 /* CategoriesView.swift in Sources */,
 				0719D4332B0590B500B1A4E3 /* RecipeForm.swift in Sources */,
 				07C52B802B0A90F000DCBB13 /* CategorySection.swift in Sources */,

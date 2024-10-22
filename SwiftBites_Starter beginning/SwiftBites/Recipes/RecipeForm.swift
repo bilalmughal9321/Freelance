@@ -45,8 +45,15 @@ struct RecipeForm: View {
 //            _categoryId = .init(initialValue: recipe.category?.id)
             _imageData = .init(initialValue: recipe.imageData)
             
-            selectedRecipe = recipe
-//            selectedRecipeIngredient = recipe.ingredients
+//            selectedRecipe = recipe
+            
+            // Check existing ingredients and update selectedRecipe's ingredients
+                let existingIngredientNames = Set(recipe.ingredients.compactMap { $0.ingredient?.name })
+
+                // Retain only existing ingredients
+                selectedRecipe?.ingredients = recipe.ingredients.filter { ingredient in
+                    existingIngredientNames.contains(ingredient.ingredient?.name ?? "")
+                }
             
         }
     }
@@ -109,10 +116,10 @@ struct RecipeForm: View {
         }
         .sheet(isPresented: $isIngredientsPickerPresented, content: ingredientPicker)
         .onAppear {
-            let storage_db = StorageData(context: context)
+            let manager = DataManager(context: context)
 //            category = categoryDBtoLocal(category_db)
             if mode != .add {
-                selectedCategry = storage_db.getCategoryById(id: selectedRecipe?.category?.ids ?? UUID())
+                selectedCategry = manager.fetchCategoryById(id: selectedRecipe?.category?.ids ?? UUID())
             }
         }
     }
@@ -122,8 +129,8 @@ struct RecipeForm: View {
     
     private func ingredientPicker() -> some View {
         IngredientsView { selectedIngredient in
-            let storage = StorageData(context: context)
-            let existingIngredient = storage.findOrCreateIngredient(name: selectedIngredient.name)
+            let storage = DataManager(context: context)
+            let existingIngredient = storage.fetchOrCreateIngredient(name: selectedIngredient.name)
             
             if mode == .add {
                 if selectedRecipeIngredient.first(where: { $0.ingredient?.name == existingIngredient.name }) == nil {
@@ -211,9 +218,6 @@ struct RecipeForm: View {
                 ForEach(category_db) { category in
                     Text(category.name).tag(category as Categories?)
                 }
-            }
-            .onChange(of: selectedCategry){
-                print(selectedCategry)
             }
         }
     }
@@ -316,12 +320,12 @@ struct RecipeForm: View {
     // MARK: - Data
     
     func delete(recipe: Recipes) {
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         guard case .edit(let recipe) = mode else {
             fatalError("Delete unavailable in add mode")
         }
         do {
-            try storage_db.deleteRecipe(id: recipe.id)
+            try manager.removeRecipe(id: recipe.id)
         }
         catch {
             print("Error in deleting recipe")
@@ -340,122 +344,189 @@ struct RecipeForm: View {
     
     func save() {
         
-        let db_storage = StorageData(context: context)
+        let manager = DataManager(context: context)
         
-        let s = selectedRecipeIngredient.map { ingredient in
-            return db_storage.fetchOrCreateIngredientInCurrentContext(ingredient.id, ingredient: ingredient)
+        // Prepare the ingredients list
+        let ingredientsList = prepareIngredientsList(manager: manager)
+        
+        switch mode {
+        case .add:
+            // Save new recipe
+            saveNewRecipe(manager: manager, ingredientsList: ingredientsList)
+            
+        case .edit(let recipe):
+            // Update existing recipe
+            updateExistingRecipe(manager: manager, recipe: recipe, ingredientsList: ingredientsList)
         }
         
-        let ingredientsList: [RecipeIngredients] = selectedRecipeIngredient.compactMap { recipeIngredient in
-            // Ensure there's an ingredient associated with the RecipeIngredients
+        dismiss()
+        
+        
+//        let manager = DataManager(context: context)
+//        
+//        
+//        let ingredientsList: [RecipeIngredients] = selectedRecipeIngredient.compactMap { recipeIngredient in
+//            // Ensure there's an ingredient associated with the RecipeIngredients
+//            guard let ingredient = recipeIngredient.ingredient else { return nil }
+//            
+//            // Fetch or create the ingredient in the current context using its name
+//            let existingIngredient = manager.fetchOrCreateIngredient(name: ingredient.name)
+//            
+//            // Return a new RecipeIngredients instance with the fetched or created ingredient
+//            return RecipeIngredients(ingredient: existingIngredient, quantity: recipeIngredient.quantity)
+//        }
+//                
+//            switch mode {
+//            case .add:
+//                
+//                let recipe = Recipes(name: name,
+//                                     summary: summary,
+//                                     category: selectedCategry,
+//                                     serving: serving,
+//                                     time: time,
+//                                     ingredients: ingredientsList,
+//                                     instructions: instructions,
+//                                     imageData: imageData)
+//                
+//                do{
+//                    try manager.insertRecipe(recipe: recipe, name: name)
+//                    
+//                    if selectedCategry != nil {
+//                        // add recipe into category
+//                        try manager.addRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(), recipe: recipe)
+//                    }
+//                    
+//                    
+//                }
+//                catch {
+//                    self.error = error
+//                }
+//            case .edit(let recipe):
+//                
+//                print(selectedRecipeIngredient)
+//                
+//                do {
+//                    try manager.modifyRecipe(
+//                        id: recipe.id,
+//                        newName: name,
+//                        newSummary: summary,
+//                        newCategory: selectedCategry,
+//                        newServing: serving,
+//                        newTime: time,
+//                        newIngredients: selectedRecipe?.ingredients ?? [],
+//                        newInstructions: instructions,
+//                        newImageData: imageData
+//                    )
+//                    
+//                    // remove this recipe from all the categories first
+//                    try manager.detachRecipeFromCategories(recipeId: recipe.id)
+//                    
+//                    // add recipe into category
+//                    if selectedCategry != nil {
+//                        
+//                        let ingredientsInCorrectContext = selectedRecipe?.ingredients.map { ingredient in
+//                            manager.fetchOrCreateIngredientInContext(ingredient.id, ingredient: ingredient)
+//                        } ?? []
+//                        
+//                        
+//                        try manager.addRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(),
+//                                                              recipe: Recipes(id: recipe.id,
+//                                                                              name: name,
+//                                                                              summary: summary,
+//                                                                              category: selectedCategry,
+//                                                                              serving: serving,
+//                                                                              time: time,
+//                                                                              ingredients: [],
+//                                                                              instructions: instructions,
+//                                                                              imageData: imageData))
+//                    }
+//                    
+//                }
+//                catch {
+//                    self.error = error
+//                }
+//            }
+//                dismiss()
+    }
+    
+    
+    // Method to prepare ingredients list
+    func prepareIngredientsList(manager: DataManager) -> [RecipeIngredients] {
+        return selectedRecipeIngredient.compactMap { recipeIngredient in
             guard let ingredient = recipeIngredient.ingredient else { return nil }
-            
-            // Fetch or create the ingredient in the current context using its name
-            let existingIngredient = db_storage.findOrCreateIngredient(name: ingredient.name)
-            
-            // Return a new RecipeIngredients instance with the fetched or created ingredient
+            let existingIngredient = manager.fetchOrCreateIngredient(name: ingredient.name)
             return RecipeIngredients(ingredient: existingIngredient, quantity: recipeIngredient.quantity)
         }
-                
-            switch mode {
-            case .add:
-                
-                let recipe = Recipes(name: name,
-                                     summary: summary,
-                                     category: selectedCategry,
-                                     serving: serving,
-                                     time: time,
-                                     ingredients: ingredientsList,
-                                     instructions: instructions,
-                                     imageData: imageData)
-                
-                do{
-                    try db_storage.addRecipe(Recipe: recipe, name: name)
-                    
-                    if selectedCategry != nil {
-                        // add recipe into category
-                        try db_storage.appendRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(), recipe: recipe)
-                    }
-                    
-                    
-                }
-                catch {
-                    self.error = error
-                }
-            case .edit(let recipe):
-                
-                print(selectedRecipeIngredient)
-                
-                do {
-                    try db_storage.updateRecipe(
-                        id: recipe.id,
-                        newName: name,
-                        newSummary: summary,
-                        newCategory: selectedCategry,
-                        newServing: serving,
-                        newTime: time,
-                        newIngredients: selectedRecipe?.ingredients ?? [],
-                        newInstructions: instructions,
-                        newImageData: imageData
-                    )
-                    
-                    // remove this recipe from all the categories first
-                    try db_storage.removeRecipeFromCategories(recipeId: recipe.id)
-                    
-                    // add recipe into category
-                    if selectedCategry != nil {
-                        
-                        let ingredientsInCorrectContext = selectedRecipe?.ingredients.map { ingredient in
-                            db_storage.fetchOrCreateIngredientInCurrentContext(ingredient.id, ingredient: ingredient)
-                        } ?? []
-                        
-                        
-                        try db_storage.appendRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(),
-                                                              recipe: Recipes(id: recipe.id,
-                                                                              name: name,
-                                                                              summary: summary,
-                                                                              category: selectedCategry,
-                                                                              serving: serving,
-                                                                              time: time,
-                                                                              ingredients: [],
-                                                                              instructions: instructions,
-                                                                              imageData: imageData))
-                    }
-                    
-                }
-                catch {
-                    self.error = error
-                }
-            }
-//            DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
-                dismiss()
-//            })
+    }
+
+    // Method to save new recipe
+    func saveNewRecipe(manager: DataManager, ingredientsList: [RecipeIngredients]) {
+        let recipe = Recipes(name: name,
+                             summary: summary,
+                             category: selectedCategry,
+                             serving: serving,
+                             time: time,
+                             ingredients: ingredientsList,
+                             instructions: instructions,
+                             imageData: imageData)
+        
+        do {
+            try manager.insertRecipe(recipe: recipe, name: name)
             
-//        }
-//        catch {
-//            self.error = error
-//        }
+            // Update the category with the new recipe
+            updateCategoryWithRecipe(manager: manager, recipe: recipe)
+        } catch {
+            self.error = error
+        }
+    }
+
+    // Method to update existing recipe
+    func updateExistingRecipe(manager: DataManager, recipe: Recipes, ingredientsList: [RecipeIngredients]) {
+        do {
+            try manager.modifyRecipe(
+                id: recipe.id,
+                newName: name,
+                newSummary: summary,
+                newCategory: selectedCategry,
+                newServing: serving,
+                newTime: time,
+                newIngredients: ingredientsList,
+                newInstructions: instructions,
+                newImageData: imageData
+            )
+            
+            // First remove the recipe from all categories
+            try manager.detachRecipeFromCategories(recipeId: recipe.id)
+            
+            // Then add it to the selected category
+            if selectedCategry != nil {
+                try manager.addRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(),
+                                                recipe: Recipes(id: recipe.id,
+                                                                name: name,
+                                                                summary: summary,
+                                                                category: selectedCategry,
+                                                                serving: serving,
+                                                                time: time,
+                                                                ingredients: [],
+                                                                instructions: instructions,
+                                                                imageData: imageData))
+            }
+        } catch {
+            self.error = error
+        }
+    }
+
+    // Method to update category with the new/updated recipe
+    func updateCategoryWithRecipe(manager: DataManager, recipe: Recipes) {
+        if selectedCategry != nil {
+            do {
+                try manager.addRecipeToCategory(categoryId: selectedCategry?.ids ?? UUID(), recipe: recipe)
+            } catch {
+                self.error = error
+            }
+        }
     }
     
-    
-    func addRecipe(name: String, summary: String, category: Categories?, serving: Int, time: Int, ingredients: [Ingredients], instructions: String, imageData: Data?) -> Recipes {
-        // Create RecipeIngredients instances from the provided ingredients
-        let recipeIngredients = ingredients.map { RecipeIngredients(ingredient: $0, quantity: "") }
-        
-        // Create a new recipe instance
-        let newRecipe = Recipes(
-            name: name,
-            summary: summary,
-            category: category,
-            serving: serving,
-            time: time,
-            ingredients: recipeIngredients, // Assign the created RecipeIngredients array
-            instructions: instructions,
-            imageData: imageData
-        )
-        
-        return newRecipe
-    }
     
    
 }

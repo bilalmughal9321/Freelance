@@ -133,9 +133,9 @@ struct IngredientsView: View {
     // MARK: - Data
     
     private func delete(ingredient: Ingredients) {
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         do {
-            try storage_db.deleteIngredient(id: ingredient.id)
+            try manager.removeIngredient(id: ingredient.id)
         }
         catch {
             print("Error in deleting ingredient")

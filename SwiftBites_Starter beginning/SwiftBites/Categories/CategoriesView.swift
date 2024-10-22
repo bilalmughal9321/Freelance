@@ -40,7 +40,7 @@ struct CategoriesView: View {
                     applyFilter()
                 }
                 .onChange(of: category_db) {
-                    applyFilter() // Apply filter whenever category_db changes
+                    applyFilter()
                 }
         }
         

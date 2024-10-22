@@ -72,10 +72,10 @@ struct CategoryForm: View {
     
     private func delete(category: Categories) {
         
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         
         do {
-            try storage_db.deleteCategoy(id: category.ids)
+            try manager.removeCategory(id: category.ids)
             dismiss()
         }
         catch {
@@ -87,16 +87,16 @@ struct CategoryForm: View {
     }
     
     private func save() {
-        let storage_db = StorageData(context: context)
+        let manager = DataManager(context: context)
         do {
             switch mode {
             case .add:
-                try storage_db.addCategory(name: name)
+                try manager.insertCategory(name: name)
 //                try storage.addCategory(name: name)
                 dismiss()
             case .edit(let category):
 //                try storage.updateCategory(id: category.id, name: name)
-                try storage_db.updateCategory(id: category.ids, newName: name)
+                try manager.modifyCategory(id: category.ids, newName: name)
                 dismiss()
             }
             

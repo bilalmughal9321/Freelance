@@ -26,8 +26,6 @@ final class Categories {
 final class Ingredients {
     var id: UUID
     @Attribute(.unique) var name: String
-
-    
     
     init(name: String? = "") {
         self.id = UUID()
