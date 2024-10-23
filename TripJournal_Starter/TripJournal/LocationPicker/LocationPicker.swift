@@ -3,14 +3,17 @@ import MapKit
 import SwiftUI
 
 struct LocationPicker: View {
-    let selectionHandler: (Location) -> Void
+    let selectionHandler: (LocationModel) -> Void
 
-    init(location: Location? = nil, selectionHandler: @escaping (Location) -> Void) {
+    init(location: LocationModel? = nil, selectionHandler: @escaping (LocationModel) -> Void) {
         if let location {
+            
+            let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            
             let placemark = MKPlacemark(
-                coordinate: location.coordinate,
+                coordinate: coordinate,
                 addressDictionary: [
-                    CNPostalAddressStreetKey: location.address ?? "",
+                    CNPostalAddressStreetKey: location.address,
                 ]
             )
             let item = MKMapItem(placemark: placemark)
@@ -94,12 +97,15 @@ struct LocationPicker: View {
         Button(
             action: {
                 let coordinate = item.placemark.coordinate
-                let location = Location(
-                    latitude: coordinate.latitude,
-                    longitude: coordinate.longitude,
-                    address: item.name
-                )
-                selectionHandler(location)
+//                let location = Location(
+//                    latitude: coordinate.latitude,
+//                    longitude: coordinate.longitude,
+//                    address: item.name
+//                )
+                
+                let loc = LocationModel(latitude: coordinate.latitude, longitude: coordinate.longitude, address: item.name ?? "")
+                
+                selectionHandler(loc)
                 dismiss()
             },
             label: {

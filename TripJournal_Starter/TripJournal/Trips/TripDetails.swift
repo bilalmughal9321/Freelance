@@ -3,7 +3,7 @@ import SwiftUI
 
 struct TripDetails: View {
     init(
-        trip: Trip,
+        trip: TripsModel,
         addAction: Binding<() -> Void>,
         deletionHandler: @escaping () -> Void
     ) {
@@ -16,7 +16,7 @@ struct TripDetails: View {
 
     @Binding private var addAction: () -> Void
 
-    @State private var trip: Trip
+    @State private var trip: TripsModel
     @State private var eventFormMode: EventForm.Mode?
     @State private var isDeleteConfirmationPresented = false
     @State private var isLoading = false
@@ -24,6 +24,7 @@ struct TripDetails: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.journalService) private var journalService
+    @EnvironmentObject var vm: JournalViewModel
 
     var body: some View {
         contentView
@@ -77,15 +78,17 @@ struct TripDetails: View {
             ForEach(trip.events) { event in
                 EventCell(
                     event: event,
-                    edit: { eventFormMode = .edit(event) },
+                    edit: {
+                        eventFormMode = .edit(event)
+                    },
                     mediaUploadHandler: { data in
                         Task {
-                            await uploadMedia(eventId: event.id, data: data)
+//                            await uploadMedia(eventId: event.id, data: data)
                         }
                     },
                     mediaDeletionHandler: { mediaId in
                         Task {
-                            await deleteMedia(withId: mediaId)
+//                            await deleteMedia(withId: mediaId)
                         }
                     }
                 )
@@ -136,8 +139,11 @@ struct TripDetails: View {
     private func reloadTrip() async {
         let id = trip.id
         do {
-            let updatedTrip = try await journalService.getTrip(withId: id)
-            trip = updatedTrip
+//            let updatedTrip = try await journalService.getTrip(withId: id)
+            if let updatedTrip = try await vm.configureTrip(id: id, method: .GET) {
+                trip = updatedTrip
+            }
+            
         } catch {
             self.error = error
         }
@@ -146,7 +152,8 @@ struct TripDetails: View {
     private func deleteTrip() async {
         isLoading = true
         do {
-            try await journalService.deleteTrip(withId: trip.id)
+//            try await journalService.deleteTrip(withId: trip.id)
+            try await vm.configureEvent(id: trip.id, method: .DELETE)
             await MainActor.run {
                 deletionHandler()
                 dismiss()

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TripCell: View {
-    let trip: Trip
+    let trip: TripsModel
     let edit: () -> Void
     let delete: () -> Void
 

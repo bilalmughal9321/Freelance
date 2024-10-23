@@ -2,7 +2,7 @@ import MapKit
 import SwiftUI
 
 struct EventCell: View {
-    let event: Event
+    let event: EventsModel
     let edit: () -> Void
     let mediaUploadHandler: (Data) -> Void
     let mediaDeletionHandler: (Media.ID) -> Void
@@ -86,32 +86,35 @@ struct EventCell: View {
 
     func content() -> some View {
         VStack(alignment: .center, spacing: 10) {
+            VStack{}
             if let location = event.location {
                 map(for: location)
-                MediaCarousel(
-                    medias: event.medias,
-                    placement: .footer,
-                    additionHandler: mediaUploadHandler,
-                    deletionHandler: mediaDeletionHandler
-                )
-            } else {
-                MediaCarousel(
-                    medias: event.medias,
-                    placement: .hero,
-                    additionHandler: mediaUploadHandler,
-                    deletionHandler: mediaDeletionHandler
-                )
+                //                MediaCarousel(
+                //                    medias: event.medias,
+                //                    placement: .footer,
+                //                    additionHandler: mediaUploadHandler,
+                //                    deletionHandler: mediaDeletionHandler
+                //                )
             }
+            //                else {
+            //                MediaCarousel(
+            //                    medias: event.medias,
+            //                    placement: .hero,
+            //                     additionHandler: mediaUploadHandler,
+            //                    deletionHandler: mediaDeletionHandler
+            //                )
+            //            }
         }
     }
 
     @ViewBuilder
-    func map(for location: Location) -> some View {
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 0, longitudinalMeters: 0)
+    func map(for location: LocationModel) -> some View {
+        let coordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+        let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 0, longitudinalMeters: 0)
         let bounds = MapCameraBounds(centerCoordinateBounds: region, minimumDistance: 250, maximumDistance: .infinity)
 
         Map(bounds: bounds) {
-            Marker(location.address ?? "", coordinate: location.coordinate)
+            Marker(location.address, coordinate: coordinates)
         }
         .mapStyle(.standard(elevation: .realistic))
         .frame(height: 150)

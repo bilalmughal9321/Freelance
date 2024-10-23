@@ -4,7 +4,7 @@ import SwiftUI
 struct EventForm: View {
     enum Mode: Hashable, Identifiable {
         case add
-        case edit(Event)
+        case edit(EventsModel)
 
         var id: String {
             switch self {
@@ -53,7 +53,7 @@ struct EventForm: View {
     @State private var name: String = ""
     @State private var note: String?
     @State private var date: Date = .now
-    @State private var location: Location?
+    @State private var location: LocationModel?
     @State private var transitionFromPrevious: String?
     @State private var isLoading = false
     @State private var error: Error?
@@ -154,12 +154,15 @@ struct EventForm: View {
     }
 
     @ViewBuilder
-    private func map(location: Location) -> some View {
-        let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 0, longitudinalMeters: 0)
+    private func map(location: LocationModel) -> some View {
+        
+        let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+        
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 0, longitudinalMeters: 0)
         let bounds = MapCameraBounds(centerCoordinateBounds: region, minimumDistance: 250, maximumDistance: .infinity)
 
         Map(bounds: bounds) {
-            Marker(location.address ?? "", coordinate: location.coordinate)
+            Marker(location.address, coordinate: coordinate)
         }
     }
 
@@ -226,15 +229,18 @@ struct EventForm: View {
         isLoading = true
         do {
             try validateForm()
-            let request = EventCreate(
-                tripId: tripId,
-                name: name,
-                note: note?.nonEmpty,
-                date: date,
-                location: location,
-                transitionFromPrevious: transitionFromPrevious?.nonEmpty
-            )
-            try await journalService.createEvent(with: request)
+            
+            
+            
+//            let request = EventCreate(
+//                tripId: tripId,
+//                name: name,
+//                note: note?.nonEmpty,
+//                date: date,
+//                location: location,
+//                transitionFromPrevious: transitionFromPrevious?.nonEmpty
+//            )
+//            try await journalService.createEvent(with: request)
             await MainActor.run {
                 updateHandler()
                 dismiss()
@@ -249,14 +255,14 @@ struct EventForm: View {
         isLoading = true
         do {
             try validateForm()
-            let request = EventUpdate(
-                name: name,
-                note: note?.nonEmpty,
-                date: date,
-                location: location,
-                transitionFromPrevious: transitionFromPrevious?.nonEmpty
-            )
-            try await journalService.updateEvent(withId: id, and: request)
+//            let request = EventUpdate(
+//                name: name,
+//                note: note?.nonEmpty,
+//                date: date,
+//                location: location,
+//                transitionFromPrevious: transitionFromPrevious?.nonEmpty
+//            )
+//            try await journalService.updateEvent(withId: id, and: request)
             await MainActor.run {
                 updateHandler()
                 dismiss()

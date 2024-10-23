@@ -3,8 +3,8 @@ import SwiftUI
 struct TripList: View {
     @Binding var addAction: () -> Void
 
-    @State private var trips: [Trip] = []
-//    @State private var trips: [TripsModel] = []
+//    @State private var trips: [Trip] = []
+    @State private var trips: [TripsModel] = []
     @State private var isLoading = false
     @State private var error: Error?
     @State private var tripFormMode: TripForm.Mode?
@@ -25,19 +25,19 @@ struct TripList: View {
                 .onAppear {
                     addAction = { tripFormMode = .add }
                 }
-                .navigationDestination(for: Trip.self) { trip in
+                .navigationDestination(for: TripsModel.self) { trip in
                     TripDetails(trip: trip, addAction: $addAction) {
                         Task {
                             await fetchTrips()
                         }
-                    }
+                    }.environmentObject(vm)
                 }
                 .sheet(item: $tripFormMode) { mode in
                     TripForm(mode: mode) {
                         Task {
                             await fetchTrips()
                         }
-                    }
+                    }.environmentObject(vm)
                 }
                 .confirmationDialog(
                     "Log out?",
@@ -122,6 +122,7 @@ struct TripList: View {
                     delete: {
                         Task {
                             await deleteTrip(withId: trip.id)
+                            
                         }
                     }
                 )
@@ -140,8 +141,8 @@ struct TripList: View {
         }
         error = nil
         do {
-            trips = try await journalService.getTrips()
-//            trips = try await vm.getTrips()
+//            trips = try await journalService.getTrips()
+            trips = try await vm.getTrips()
         } catch {
             self.error = error
         }
@@ -151,7 +152,8 @@ struct TripList: View {
     private func deleteTrip(withId id: Trip.ID) async {
         isLoading = true
         do {
-            try await journalService.deleteTrip(withId: id)
+//            try await journalService.deleteTrip(withId: id)
+            try await vm.configureTrip(id: id, method: .DELETE)
             await fetchTrips()
         } catch {
             self.error = error

@@ -17,4 +17,6 @@ struct Constant {
     
     static var TRIPS = "\(BASE_URL)/trips"
     
+    static var EVENTS = "\(BASE_URL)/events"
+    
 }

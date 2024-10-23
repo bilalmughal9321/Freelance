@@ -51,3 +51,11 @@ extension Collection {
         return isEmpty ? nil : self
     }
 }
+
+extension Date {
+    var getisoDate: String {
+        let isoFormatter = ISO8601DateFormatter()
+        let isoDateString = isoFormatter.string(from: self)
+        return isoDateString
+    }
+}

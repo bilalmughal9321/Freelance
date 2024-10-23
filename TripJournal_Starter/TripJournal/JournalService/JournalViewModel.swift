@@ -99,31 +99,110 @@ class JournalViewModel: ObservableObject {
             }
             throw error
         }
-        //        return []
     }
     
-    func updateTrip(id: Int) async throws {
-        
-        
-        
+    // MARK:  # -------------------------- Edit / Delete / Get by id Trips --------------------------- # -
+    
+    func configureTrip(id: Int, param: [String: Any] = [:], method: HTTPMethod = .GET) async throws -> TripsModel? {
         
         do {
             let data = try await NetworkManager.shared.performRequest(
-                method: .PUT,
+                method: method,
                 urlString: "\(Constant.TRIPS)/\(id)",
-                parameters: [:],
+                parameters: param,
                 contentType: .json,
                 headers: ["Authorization": "\(token?.tokenType ?? "") \(token?.accessToken ?? "")"]
             )
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print(jsonString)
+            if method == .GET {
+                let decoder = JSONDecoder()
+                let jsonModel = try decoder.decode(TripsModel.self, from: data)
+                return jsonModel
             }
-            let decoder = JSONDecoder()
-            let jsonModel = try decoder.decode([TripsModel].self, from: data)
-//            return jsonModel
         }
-        catch {}
+        catch {
+            let errResponse = (error as? NetworkResponseError)?.responseBody ?? ""
+            if let jsonData = errResponse.data(using: .utf8) {
+                let decoder = JSONDecoder()
+                let errModel = try decoder.decode(ErrorResponse.self, from: jsonData)
+                print(errModel.detail)
+                DispatchQueue.main.async {
+                    self.Error = errModel.detail
+                }
+            }
+            throw error
+        }
+        return nil
     }
+    
+    // MARK:  # -------------------------- Create Trips --------------------------- # -
+    
+    func createTrip(param: [String: Any]) async throws {
+        do {
+            let data = try await NetworkManager.shared.performRequest(
+                method: .POST,
+                urlString: "\(Constant.TRIPS)",
+                parameters: param,
+                contentType: .json,
+                headers: ["Authorization": "\(token?.tokenType ?? "") \(token?.accessToken ?? "")"]
+            )
+        }
+        catch {
+            throw error
+        }
+    }
+    
+    // MARK:  # -------------------------- Create Events --------------------------- # -
+    
+    func createEvents(param: [String: Any]) async throws {
+        do {
+            let data = try await NetworkManager.shared.performRequest(
+                method: .POST,
+                urlString: "\(Constant.EVENTS)",
+                parameters: param,
+                contentType: .json,
+                headers: ["Authorization": "\(token?.tokenType ?? "") \(token?.accessToken ?? "")"]
+            )
+        }
+        catch {
+            throw error
+        }
+    }
+    
+    
+    // MARK:  # -------------------------- Edit / Delete / Get by id Event --------------------------- # -
+    
+    func configureEvent(id: Int, param: [String: Any] = [:], method: HTTPMethod = .GET) async throws -> EventsModel? {
+        
+        do {
+            let data = try await NetworkManager.shared.performRequest(
+                method: method,
+                urlString: "\(Constant.EVENTS)/\(id)",
+                parameters: param,
+                contentType: .json,
+                headers: ["Authorization": "\(token?.tokenType ?? "") \(token?.accessToken ?? "")"]
+            )
+            if method == .GET {
+                let decoder = JSONDecoder()
+                let jsonModel = try decoder.decode(EventsModel.self, from: data)
+                return jsonModel
+            }
+        }
+        catch {
+            let errResponse = (error as? NetworkResponseError)?.responseBody ?? ""
+            if let jsonData = errResponse.data(using: .utf8) {
+                let decoder = JSONDecoder()
+                let errModel = try decoder.decode(ErrorResponse.self, from: jsonData)
+                print(errModel.detail)
+                DispatchQueue.main.async {
+                    self.Error = errModel.detail
+                }
+            }
+            throw error
+        }
+        return nil
+    }
+    
+    
     
 }
 
@@ -153,12 +232,11 @@ struct ErrorResponse: Codable {
 // MARK:  # -------------------------- Trips List Model --------------------------- # -
 
 struct TripsModel: Codable, Hashable, Identifiable {
-    
     let name: String
     let startDate: Date
     let endDate: Date
     let id: Int
-    let events: [Events]
+    let events: [EventsModel]
     
     enum CodingKeys: String, CodingKey {
         case name
@@ -178,7 +256,7 @@ struct TripsModel: Codable, Hashable, Identifiable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         id = try container.decode(Int.self, forKey: .id)
-        events = try container.decode([Events].self, forKey: .events)
+        events = try container.decode([EventsModel].self, forKey: .events)
         
         // Decode date strings to Date objects
         let startDateString = try container.decode(String.self, forKey: .startDate)
@@ -196,13 +274,65 @@ struct TripsModel: Codable, Hashable, Identifiable {
     
     static func == (lhs: TripsModel, rhs: TripsModel) -> Bool {
         return lhs.name == rhs.name &&
-        lhs.startDate == rhs.startDate &&
-        lhs.endDate == rhs.endDate &&
-        lhs.id == rhs.id &&
-        lhs.events == rhs.events
+            lhs.startDate == rhs.startDate &&
+            lhs.endDate == rhs.endDate &&
+            lhs.id == rhs.id &&
+            lhs.events == rhs.events
     }
 }
 
-struct Events: Codable, Hashable, Equatable {
-    // Define properties for events if needed
+struct EventsModel: Codable, Hashable, Equatable, Identifiable {
+    let name: String
+    let date: Date
+    let note: String?
+    let location: LocationModel?
+    let transitionFromPrevious: String?
+    let id: Int
+    let medias: [MediasModel]
+    
+    enum CodingKeys: String, CodingKey {
+        case name
+        case date
+        case note
+        case location
+        case transitionFromPrevious = "transition_from_previous"
+        case id
+        case medias
+    }
+    
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return formatter
+    }()
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        note = try container.decodeIfPresent(String.self, forKey: .note)  // Optional note
+        location = try container.decode(LocationModel.self, forKey: .location)
+        transitionFromPrevious = try container.decodeIfPresent(String.self, forKey: .transitionFromPrevious) // Optional transition
+        id = try container.decode(Int.self, forKey: .id)
+        medias = try container.decode([MediasModel].self, forKey: .medias)
+        
+        let dateString = try container.decode(String.self, forKey: .date)
+        
+        guard let dateValue = EventsModel.dateFormatter.date(from: dateString) else {
+            throw DecodingError.dataCorruptedError(forKey: .date,
+                                                   in: container,
+                                                   debugDescription: "Date string does not match format expected by formatter.")
+        }
+        
+        date = dateValue
+    }
+}
+
+struct LocationModel: Codable, Hashable, Equatable {
+    let latitude: Double
+    let longitude: Double
+    let address: String
+}
+
+struct MediasModel: Codable, Hashable, Equatable {
+    // Define media properties when needed
 }

@@ -4,7 +4,7 @@ struct TripForm: View {
     /// Determines if the form is being used to add a new trip or edit an existing one.
     enum Mode: Hashable, Identifiable {
         case add
-        case edit(Trip)
+        case edit(TripsModel)
 
         var id: String {
             switch self {
@@ -52,6 +52,7 @@ struct TripForm: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.journalService) private var journalService
+    @EnvironmentObject var vm: JournalViewModel
 
     // MARK: - Body
 
@@ -145,8 +146,18 @@ struct TripForm: View {
         isLoading = true
         do {
             try validateForm()
-            let request = TripCreate(name: name, startDate: startDate, endDate: endDate)
-            try await journalService.createTrip(with: request)
+            
+            let start_date = startDate.getisoDate
+            let end_date = endDate.getisoDate
+            
+            let parameters: [String: Any] = [
+                "name": name,
+                "start_date": start_date,
+                "end_date": end_date
+            ]
+            
+            try await vm.createTrip(param: parameters)
+            
             await MainActor.run {
                 updateHandler()
                 dismiss()
@@ -161,8 +172,17 @@ struct TripForm: View {
         isLoading = true
         do {
             try validateForm()
-            let request = TripUpdate(name: name, startDate: startDate, endDate: endDate)
-            try await journalService.updateTrip(withId: id, and: request)
+            
+            let start_date = startDate.getisoDate
+            let end_date = endDate.getisoDate
+            
+            let parameters: [String: Any] = [
+                "name": name,
+                "start_date": start_date,
+                "end_date": end_date
+            ]
+            
+            try await vm.configureTrip(id: id, param: parameters, method: .PUT)
             await MainActor.run {
                 updateHandler()
                 dismiss()
@@ -176,7 +196,8 @@ struct TripForm: View {
     private func deleteTrip(withId id: Trip.ID) async {
         isLoading = true
         do {
-            try await journalService.deleteTrip(withId: id)
+//            try await journalService.deleteTrip(withId: id)
+            try await vm.configureTrip(id: id, method: .DELETE)
             await MainActor.run {
                 updateHandler()
                 dismiss()

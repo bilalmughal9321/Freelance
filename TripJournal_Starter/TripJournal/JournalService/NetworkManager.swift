@@ -10,6 +10,7 @@ enum HTTPMethod: String {
     case GET
     case POST
     case PUT
+    case DELETE
 }
 
 enum ContentType {
@@ -62,7 +63,7 @@ struct NetworkManager {
         }
         
         // For POST requests, add parameters in the body
-        if method == .POST, let parameters = parameters {
+        if method == .POST || method == .PUT || method == .DELETE, let parameters = parameters {
             switch contentType {
             case .urlEncoded:
                 let encodedParameters = parameters.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
