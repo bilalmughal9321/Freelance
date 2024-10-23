@@ -12,8 +12,8 @@ struct AuthView: View {
         static let emptyPassword = Self(errorDescription: "Password is required.")
     }
 
-    @State private var username: String = ""
-    @State private var password: String = ""
+    @State private var username: String = "test"
+    @State private var password: String = "test"
     @State private var isLoading = false
     @State private var error: Error?
 

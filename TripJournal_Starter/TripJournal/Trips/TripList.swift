@@ -4,6 +4,7 @@ struct TripList: View {
     @Binding var addAction: () -> Void
 
     @State private var trips: [Trip] = []
+//    @State private var trips: [TripsModel] = []
     @State private var isLoading = false
     @State private var error: Error?
     @State private var tripFormMode: TripForm.Mode?
@@ -44,7 +45,7 @@ struct TripList: View {
                     titleVisibility: .visible,
                     actions: {
                         Button("Log out", role: .destructive) {
-                            journalService.logOut()
+                            vm.logOut()
                         }
                     },
                     message: {
@@ -140,6 +141,7 @@ struct TripList: View {
         error = nil
         do {
             trips = try await journalService.getTrips()
+//            trips = try await vm.getTrips()
         } catch {
             self.error = error
         }

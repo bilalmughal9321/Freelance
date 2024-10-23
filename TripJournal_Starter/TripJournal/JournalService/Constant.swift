@@ -15,4 +15,6 @@ struct Constant {
     
     static var TOKEN_URL = "\(BASE_URL)/token"
     
+    static var TRIPS = "\(BASE_URL)/trips"
+    
 }
