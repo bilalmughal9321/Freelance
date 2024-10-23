@@ -230,7 +230,19 @@ struct EventForm: View {
         do {
             try validateForm()
             
+            let dateString = date.getisoDate
             
+            var eventDictionary: [String: Any] = [
+                "name": name,
+                "date": dateString, // ISO 8601 formatted date string
+                "location": [
+                    "latitude": location?.latitude ?? 0.0,
+                    "longitude": location?.longitude ?? 0.0,
+                    "address": location?.address ?? ""
+                ],
+                "transition_from_previous": transitionFromPrevious?.nonEmpty,
+                "trip_id": tripId
+            ]
             
 //            let request = EventCreate(
 //                tripId: tripId,
