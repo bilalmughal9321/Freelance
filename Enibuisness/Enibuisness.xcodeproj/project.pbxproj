@@ -11,6 +11,19 @@
 		9C2EA5282CD68CE4008DB775 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5272CD68CE4008DB775 /* ContentView.swift */; };
 		9C2EA52A2CD68CE6008DB775 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C2EA5292CD68CE6008DB775 /* Assets.xcassets */; };
 		9C2EA52D2CD68CE6008DB775 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9C2EA52C2CD68CE6008DB775 /* Preview Assets.xcassets */; };
+		9C2EA5372CD69024008DB775 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5362CD69024008DB775 /* LoginView.swift */; };
+		9C2EA5392CD69067008DB775 /* LoginVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5382CD69067008DB775 /* LoginVM.swift */; };
+		9C2EA53C2CD690C4008DB775 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA53B2CD690C4008DB775 /* TabView.swift */; };
+		9C2EA53E2CD690E3008DB775 /* GroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA53D2CD690E3008DB775 /* GroupView.swift */; };
+		9C2EA5412CD690F7008DB775 /* GroupVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5402CD690F7008DB775 /* GroupVM.swift */; };
+		9C2EA5432CD69102008DB775 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5422CD69102008DB775 /* SettingsView.swift */; };
+		9C2EA5462CD69113008DB775 /* SettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5452CD69113008DB775 /* SettingsVM.swift */; };
+		9C2EA5492CD691CB008DB775 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5482CD691CB008DB775 /* ChatView.swift */; };
+		9C2EA54B2CD691D2008DB775 /* ChatVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA54A2CD691D2008DB775 /* ChatVM.swift */; };
+		9C2EA5532CD6B48F008DB775 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5522CD6B48F008DB775 /* AppCoordinator.swift */; };
+		9C2EA5562CD6B4C8008DB775 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5552CD6B4C8008DB775 /* NetworkManager.swift */; };
+		9C2EA5582CD6B4D2008DB775 /* ApiEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5572CD6B4D2008DB775 /* ApiEndpoints.swift */; };
+		9C2EA55A2CD6B4F6008DB775 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C2EA5592CD6B4F6008DB775 /* Constant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +32,19 @@
 		9C2EA5272CD68CE4008DB775 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9C2EA5292CD68CE6008DB775 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C2EA52C2CD68CE6008DB775 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9C2EA5362CD69024008DB775 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		9C2EA5382CD69067008DB775 /* LoginVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVM.swift; sourceTree = "<group>"; };
+		9C2EA53B2CD690C4008DB775 /* TabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
+		9C2EA53D2CD690E3008DB775 /* GroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupView.swift; sourceTree = "<group>"; };
+		9C2EA5402CD690F7008DB775 /* GroupVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupVM.swift; sourceTree = "<group>"; };
+		9C2EA5422CD69102008DB775 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9C2EA5452CD69113008DB775 /* SettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVM.swift; sourceTree = "<group>"; };
+		9C2EA5482CD691CB008DB775 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		9C2EA54A2CD691D2008DB775 /* ChatVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVM.swift; sourceTree = "<group>"; };
+		9C2EA5522CD6B48F008DB775 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		9C2EA5552CD6B4C8008DB775 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		9C2EA5572CD6B4D2008DB775 /* ApiEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiEndpoints.swift; sourceTree = "<group>"; };
+		9C2EA5592CD6B4F6008DB775 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +77,11 @@
 		9C2EA5242CD68CE4008DB775 /* Enibuisness */ = {
 			isa = PBXGroup;
 			children = (
+				9C2EA5512CD6B468008DB775 /* Coordinators */,
+				9C2EA5502CD6B41D008DB775 /* Services */,
+				9C2EA54F2CD6B415008DB775 /* Utils */,
+				9C2EA54D2CD6B3FD008DB775 /* Views */,
+				9C2EA54C2CD6B3EE008DB775 /* ViewModels */,
 				9C2EA5252CD68CE4008DB775 /* EnibuisnessApp.swift */,
 				9C2EA5272CD68CE4008DB775 /* ContentView.swift */,
 				9C2EA5292CD68CE6008DB775 /* Assets.xcassets */,
@@ -65,6 +96,70 @@
 				9C2EA52C2CD68CE6008DB775 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9C2EA54C2CD6B3EE008DB775 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA5382CD69067008DB775 /* LoginVM.swift */,
+				9C2EA5402CD690F7008DB775 /* GroupVM.swift */,
+				9C2EA54A2CD691D2008DB775 /* ChatVM.swift */,
+				9C2EA5452CD69113008DB775 /* SettingsVM.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9C2EA54D2CD6B3FD008DB775 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA53B2CD690C4008DB775 /* TabView.swift */,
+				9C2EA5362CD69024008DB775 /* LoginView.swift */,
+				9C2EA53D2CD690E3008DB775 /* GroupView.swift */,
+				9C2EA5482CD691CB008DB775 /* ChatView.swift */,
+				9C2EA5422CD69102008DB775 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9C2EA54F2CD6B415008DB775 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA55B2CD6B501008DB775 /* Fonts */,
+				9C2EA5592CD6B4F6008DB775 /* Constant.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		9C2EA5502CD6B41D008DB775 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA5542CD6B4BC008DB775 /* Networking */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9C2EA5512CD6B468008DB775 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA5522CD6B48F008DB775 /* AppCoordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		9C2EA5542CD6B4BC008DB775 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				9C2EA5552CD6B4C8008DB775 /* NetworkManager.swift */,
+				9C2EA5572CD6B4D2008DB775 /* ApiEndpoints.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		9C2EA55B2CD6B501008DB775 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +232,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C2EA5532CD6B48F008DB775 /* AppCoordinator.swift in Sources */,
+				9C2EA53C2CD690C4008DB775 /* TabView.swift in Sources */,
+				9C2EA55A2CD6B4F6008DB775 /* Constant.swift in Sources */,
+				9C2EA5432CD69102008DB775 /* SettingsView.swift in Sources */,
+				9C2EA5562CD6B4C8008DB775 /* NetworkManager.swift in Sources */,
+				9C2EA5492CD691CB008DB775 /* ChatView.swift in Sources */,
+				9C2EA5392CD69067008DB775 /* LoginVM.swift in Sources */,
+				9C2EA53E2CD690E3008DB775 /* GroupView.swift in Sources */,
+				9C2EA5412CD690F7008DB775 /* GroupVM.swift in Sources */,
+				9C2EA5372CD69024008DB775 /* LoginView.swift in Sources */,
+				9C2EA5582CD6B4D2008DB775 /* ApiEndpoints.swift in Sources */,
 				9C2EA5282CD68CE4008DB775 /* ContentView.swift in Sources */,
 				9C2EA5262CD68CE4008DB775 /* EnibuisnessApp.swift in Sources */,
+				9C2EA54B2CD691D2008DB775 /* ChatVM.swift in Sources */,
+				9C2EA5462CD69113008DB775 /* SettingsVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
