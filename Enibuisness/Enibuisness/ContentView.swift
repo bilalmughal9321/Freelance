@@ -27,7 +27,7 @@ struct ContentView: View {
                 GroupView(groupViewModel: groupVM)
                     .environmentObject(coordinator)
             case .chat:
-                ChatView(chatViewModel: chatVM)
+                ChatView()
                     .environmentObject(coordinator)
             case .settings:
                 SettingsView(settingsViewModel: settingVM)
