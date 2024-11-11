@@ -45,6 +45,7 @@ struct ChatView: View {
             HStack {
                 TextField("Message", text: $newMessageText)
 //                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .foregroundStyle(.white)
                     .padding(.horizontal, 8)
                     .frame(height: 50)
                     .background(RoundedRectangle(cornerRadius: 8).stroke(.gray, lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/))
@@ -62,6 +63,8 @@ struct ChatView: View {
             
             .padding()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.black)
     }
     
     // Method to add a new message

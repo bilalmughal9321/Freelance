@@ -22,10 +22,10 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             Group{
-//                GroupView(groupViewModel: groupViewModel)
-//                    .tabItem {
-//                        Label("Group", systemImage: "person.3")
-//                    }
+                GroupView(groupViewModel: groupViewModel)
+                    .tabItem {
+                        Label("Group", systemImage: "person.3")
+                    }
                 
                 ChatView()
                     .tabItem {
