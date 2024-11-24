@@ -15,6 +15,11 @@ struct Painting {
 }
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var profileImg: UIImageView!
+    
+    @IBOutlet weak var emailLbl: UILabel!
+    
     @IBOutlet weak var tableView: UITableView!
     
     var imagePickerCompletionHandler: ((UIImage?) -> Void)?
@@ -27,17 +32,67 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        startLoading()
         fetchList(id: DBManager.shared.userId) { arr in
+            self.stopLoading()
             self.paintings = arr
             self.tableView.reloadData()
         }
+        
+        
+        emailLbl.text = DBManager.shared.email
+        
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(openImageGallery))
+        profileImg.isUserInteractionEnabled = true
+        profileImg.addGestureRecognizer(longPressRecognizer)
+        
+        
+//        if let imageData = Data(base64Encoded: painting.image, options: .ignoreUnknownCharacters) {
+//
+//        }
+        startLoading()
+        DBManager.shared.fetchProfileImageFromFirestore { image, error in
+            self.stopLoading()
+            if let error = error {
+                print("Failed to fetch profile image: \(error.localizedDescription)")
+            } else if let image = image {
+                print("Profile image fetched successfully.")
+                self.profileImg.image = image
+                // Use the image (e.g., display in UIImageView)
+            } else {
+                print("No profile image found.")
+            }
+        }
+        
+//        DBManager.shared.fetchProfileImage(userId: DBManager.shared.userId) { data in
+//            DispatchQueue.main.async {
+//                if let datas = data, let imageData = UIImage(data: datas) {
+//                    self.profileImg.image = imageData
+//                }
+//                else {
+//                    self.profileImg.image = UIImage(systemName: "person.fill")
+//                }
+//            }
+//        }
+        
     }
     
  
+    @objc func openImageGallery() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.sourceType = .photoLibrary
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true, completion: nil)
+    }
 
     @IBAction func addPainting(_ sender: UIBarButtonItem) {
         barBtn()
     }
+    
+    @IBAction func addPaint(_ sender: Any) {
+        barBtn()
+    }
+    
 
     func fetchList(id: String,  _ completion: @escaping ([PaintingModel]) -> ()) {
         DBManager.shared.listPaintings(for: id) { resp, err in
@@ -62,6 +117,8 @@ class ViewController: UIViewController {
     
 }
 
+
+
 // MARK: # --------------------------- BAR BUTTON ------------------------------ # -
 
 extension ViewController {
@@ -76,32 +133,43 @@ extension ViewController {
             
             self.presentImagePicker { selectedImage in
                 var imageBase64: String? = nil
-                if let imageData = selectedImage?.jpegData(compressionQuality: 0.8) {
+                
+                if let imageData = selectedImage?.jpegData(compressionQuality: 0.01) {
+//                if let imageData = self.compressImageToLimit(image: selectedImage!, limitInMB: 0.5) {
                     imageBase64 = imageData.base64EncodedString()
                     
                     
-                    let newPainting = PaintingModel(identifier: DBManager.shared.generateRandomString, image: imageData, title: title, subtitle: subtitle)
+                    let newPainting = PaintingModel(identifier: DBManager.shared.generateRandomString, image: imageBase64 ?? "", title: title, subtitle: subtitle, isFavourite: false)
                     let id = DBManager.shared.userId
-                    DBManager.shared.addPainting(for: id, painting: newPainting) { err in
-                        DispatchQueue.main.async {
-                            if let _ = err {
-                                self.showAlert(title: "Error", message: "Error on adding painting")
-                            }
-                            else {
-                                self.showAlert(title: "Alert", message: "Painting added")
-                                
-                                self.fetchList(id: id) { arr in
-                                    self.paintings = arr
-                                    self.tableView.reloadData()
-                                }
-                            }
-                        }
-                    }
                     
+                    self.startLoading()
+                    DBManager.shared.addPaintingInFirestore(id, newPainting) { response in
+                        self.stopLoading()
+                        self.showAlertAction(title: "Alert", message: "Painting added"){
+                            
+                            self.startLoading()
+                            
+                            self.fetchList(id: id) { arr in
+                                
+                                self.stopLoading()
+                                
+                                self.paintings = arr
+                                self.tableView.reloadData()
+                            }
+                            
+                        }
+                        
+                        
+                        
+                        
+                        
+                    } _: { err in
+                        self.stopLoading()
+                        self.showAlert(title: "Error", message: "\(err.localizedDescription)")
+                    }
+
                 }
                 
-//                self.paintings.append(newPainting)
-//                self.tableView.reloadData()
             }
         }
         
@@ -123,18 +191,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? PaintingCell
         let painting = paintings[indexPath.row]
-//        cell.textLabel?.text = "\(painting.title) by \(painting.artist)"
-//        cell.detailTextLabel?.text = "Year: \(painting.year)"
-        
-        let base64String = painting.image
-        if let image = UIImage(data: base64String) {
-            cell?.cellImage?.image = image
+        if let imageData = Data(base64Encoded: painting.image, options: .ignoreUnknownCharacters) {
+            if let image = UIImage(data: imageData) {
+                cell?.cellImage?.image = image
+            }
+            else {
+                print("Error: Could not convert data to UIImage")
+            }
+        }
+        else {
+            print("Error: Could not decode Base64 string to Data")
         }
         return cell!
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        return 200
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -149,18 +221,22 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let id = DBManager.shared.userId
             let paintingId = self.paintings[indexPath.row].identifier
             
+            self.startLoading()
             DBManager.shared.deletePainting(for: id, paintingId: paintingId) { err in
-                DispatchQueue.main.async {
+                self.stopLoading()
                     if let _ = err {
                         self.showAlert(title: "Error", message: "Error in deleting painting")
                     }
                     else {
+                        
+                        self.startLoading()
                         self.fetchList(id: id) { arr in
+                            
+                            self.stopLoading()
                             self.paintings = arr
                             self.tableView.reloadData()
                         }
                     }
-                }
             }
             
             self.paintings.remove(at: indexPath.row)
@@ -182,30 +258,36 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                       let subtitle = alert.textFields?[1].text  else { return }
                 
                 self.presentImagePicker { selectedImage in
-//                    var imageBase64: String? = painting.image
-//                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.8) {
-//                        imageBase64 = imageData.base64EncodedString()
-//                    }
+                    var imageBase64: String? = painting.image
+                    //                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.8) {
+                    //                        imageBase64 = imageData.base64EncodedString()
+                    //                    }
                     
-                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.8){
+                    
+                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.01) {
+                        
+                        imageBase64 = imageData.base64EncodedString()
+                        
+                        //                    if let imageData = self.compressImageToLimit(image: selectedImage!, limitInMB: 1) {
                         let id = DBManager.shared.userId
                         let paintingId = painting.identifier
                         
-                        let newPainting = PaintingModel(identifier: paintingId, image: imageData, title: title, subtitle: subtitle)
+                        let newPainting = PaintingModel(identifier: paintingId, image: imageBase64 ?? "", title: title, subtitle: subtitle, isFavourite: false)
                         
+                        self.startLoading()
                         DBManager.shared.updatePainting(for: id, identifier: paintingId, updatedPainting: newPainting) { err in
-                            DispatchQueue.main.async {
-                                if let _ = err {
-                                    self.showAlert(title: "Error", message: "Error in updating painting")
-                                }
-                                else {
-                                    self.fetchList(id: id) { arr in
-                                        self.paintings = arr
-                                        self.tableView.reloadData()
-                                    }
+                            self.stopLoading()
+                            if let _ = err {
+                                self.showAlert(title: "Error", message: "Error in updating painting")
+                            }
+                            else {
+                                self.startLoading()
+                                self.fetchList(id: id) { arr in
+                                    self.stopLoading()
+                                    self.paintings = arr
+                                    self.tableView.reloadData()
                                 }
                             }
-                           
                         }
                     }
                 }
@@ -239,6 +321,23 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let selectedImage = info[.originalImage] as? UIImage {
+            profileImg.image = selectedImage // Set the selected image to your imageView
+            
+            let id = DBManager.shared.userId
+            
+            if let data = selectedImage.jpegData(compressionQuality: 0.01)?.base64EncodedString() {
+                startLoading()
+                DBManager.shared.uploadImageToStorage(imageString: data) { _ in
+                    self.stopLoading()
+                }
+            }
+            
+            
+        }
+        
+        
         picker.dismiss(animated: true, completion: nil)
         let selectedImage = info[.originalImage] as? UIImage
         imagePickerCompletionHandler?(selectedImage)
@@ -253,3 +352,54 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     
     
 }
+
+extension ViewController {
+    
+//    func compressImageToLimit(image: UIImage, limitInMB: Double) -> Data? {
+//        let limitInBytes = limitInMB * 1024 * 1024 // Convert MB to bytes
+//        
+//        var compression: CGFloat = 1.0 // Maximum quality
+//        guard var imageData = image.jpegData(compressionQuality: compression) else {
+//            return nil
+//        }
+//        
+//        // Reduce quality until it fits the limit
+//        while imageData.count > Int(limitInBytes) && compression > 0 {
+//            compression -= 0.1 // Reduce compression quality
+//            if let compressedData = image.jpegData(compressionQuality: compression) {
+//                imageData = compressedData
+//            }
+//        }
+//        
+//        return imageData.count <= Int(limitInBytes) ? imageData : nil
+//    }
+    
+    func compressImageToLimit(image: UIImage, limitInMB: Double) -> String? {
+        let limitInBytes = limitInMB * 1024 * 1024 // Convert MB to bytes
+        
+        var compression: CGFloat = 1.0 // Maximum quality
+        guard var imageData = image.jpegData(compressionQuality: compression) else {
+            return nil
+        }
+        
+        // Reduce quality until it fits the limit
+        while imageData.count > Int(limitInBytes) && compression > 0 {
+            compression -= 0.1 // Reduce compression quality
+            if let compressedData = image.jpegData(compressionQuality: compression) {
+                imageData = compressedData
+            }
+        }
+        
+        // Ensure image size is within the limit
+        guard imageData.count <= Int(limitInBytes) else {
+            print("Failed to compress image within \(limitInMB) MB")
+            return nil
+        }
+        
+        // Convert compressed data to Base64
+        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
+        return base64String
+    }
+    
+}
+

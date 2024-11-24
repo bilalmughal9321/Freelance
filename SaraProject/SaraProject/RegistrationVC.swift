@@ -31,6 +31,7 @@ class RegistrationVC: UIViewController {
         
         guard passwordField.text != "" else {return showAlert(title: "Error", message: "Password is missing")}
         
+        startLoading()
         DBManager.shared.signUpUser(email: emailField.text!,
                                     password: passwordField.text!) {
             
@@ -42,6 +43,11 @@ class RegistrationVC: UIViewController {
             
             self.navigationController?.popViewController(animated: true)
             
+        } err: { error in
+            DispatchQueue.main.async {
+                self.stopLoading()
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            }
         }
         
         

@@ -7,6 +7,8 @@
 
 import UIKit
 
+class LoadingAnimationView: UIActivityIndicatorView {}
+
 
 class loginVC: UIViewController {
     
@@ -19,7 +21,7 @@ class loginVC: UIViewController {
     
     @IBOutlet weak var passwordField: UITextField!{
         didSet{
-            passwordField.text = "bilal123"
+            passwordField.text = "bilal1234"
         }
     }
     
@@ -42,6 +44,8 @@ class loginVC: UIViewController {
         
         guard passwordField.text != "" else {return showAlert(title: "Error", message: "Password is missing")}
         
+        startLoading()
+        
         DBManager.shared.loginUser(email: emailField.text!,
                                    password: passwordField.text!) { userId in
             DBManager.shared.userId = userId
@@ -50,7 +54,15 @@ class loginVC: UIViewController {
             DispatchQueue.main.async {
 //                self.showAlert(title: "Alert", message: "User login successfully")
             }
-            self.performSegue(withIdentifier: "painting", sender: sender)
+            self.performSegue(withIdentifier: "PaintingViewController", sender: sender)
+        } err: { error in
+            DispatchQueue.main.async {
+                self.stopLoading()
+                
+                self.showAlert(title: "Error", message: error.localizedDescription)
+            }
+            
+            
         }
         
         
@@ -71,5 +83,40 @@ class loginVC: UIViewController {
 extension ViewController: signUpDelegate {
     
     func backScreen() {}
+    
+}
+
+
+extension UIViewController {
+    
+    func startLoading() {
+        
+        let loading = LoadingAnimationView()
+        loading.color = .white
+        loading.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        loading.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(loading)
+        
+        NSLayoutConstraint.activate([
+            loading.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            loading.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            loading.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 1),
+            loading.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 1)
+        ])
+        
+        loading.startAnimating()
+        
+    }
+    
+    func stopLoading() {
+        
+        for _views in self.view.subviews {
+            if _views is LoadingAnimationView {
+                _views.removeFromSuperview()
+            }
+        }
+        
+    }
     
 }

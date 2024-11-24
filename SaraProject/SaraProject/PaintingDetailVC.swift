@@ -27,10 +27,10 @@ class PaintingDetailVC: UIViewController {
         super.viewDidLoad()
 
         cellImage.layer.cornerRadius = 15
-//        cellImage.layer.masksToBounds = true 
+        cellImage.layer.masksToBounds = true 
         
-        if let data = paintingModel?.image {
-            cellImage.image = UIImage(data: data)
+        if let imageData = Data(base64Encoded: paintingModel?.image ?? "", options: .ignoreUnknownCharacters) {
+            cellImage.image = UIImage(data: imageData)
         }
         
         titleLbl.text = paintingModel?.title ?? ""
@@ -44,37 +44,31 @@ class PaintingDetailVC: UIViewController {
     
     @IBAction func addToFavourites(_ sender: Any) {
         
-        let id = DBManager.shared.userId
-        
-        if let model = paintingModel {
+        guard let model = paintingModel else { return }
             
-            if fromFavourites {
-                DBManager.shared.deleteFavouritePainting(for: id, paintingId: model.identifier) { err in
-                    if let _ = err {
-                        self.showAlert(title: "Error", message: "Error in deleting from favourites")
-                    }
-                    else {
-                        self.showAlert(title: "Alert", message: "Painting deleted from favourite")
-                    }
+            let id = DBManager.shared.userId
+            let isFavourite = !fromFavourites // Toggle favourite status
+            
+            let updatedModel = PaintingModel(
+                identifier: model.identifier,
+                image: model.image,
+                title: model.title,
+                subtitle: model.subtitle,
+                isFavourite: isFavourite
+            )
+            
+        self.startLoading()
+            DBManager.shared.updatePainting(for: id, identifier: model.identifier, updatedPainting: updatedModel) { err in
+                
+                self.stopLoading()
+                
+                if let err = err {
+                    self.showAlert(title: "Error", message: "\(err.localizedDescription)")
+                } else {
+                    let message = isFavourite ? "Painting added to favourites" : "Painting removed from favourites"
+                    self.showAlert(title: "Alert", message: message)
                 }
             }
-            
-            else {
-                DBManager.shared.AddFavourite(for: id, painting: model) { err in
-                    if let _ = err {
-                        self.showAlert(title: "Error", message: "Error in adding in favourites")
-                    }
-                    else {
-                        self.showAlert(title: "Alert", message: "Painting added into favourite you can check on favourite section")
-                    }
-                }
-            }
-            
-            
-            
-        }
-        
-        
         
     }
     

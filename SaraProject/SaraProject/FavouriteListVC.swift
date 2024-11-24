@@ -22,8 +22,15 @@ class FavouriteListVC: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+       
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        startLoading()
+        
         fetchList(id: DBManager.shared.userId) { arr in
-            self.paintings = arr
+            self.stopLoading()
+            self.paintings = arr.filter { $0.isFavourite }
             self.tableView.reloadData()
         }
     }
@@ -31,7 +38,7 @@ class FavouriteListVC: UIViewController {
     
 
     func fetchList(id: String,  _ completion: @escaping ([PaintingModel]) -> ()) {
-        DBManager.shared.listFavouritePaintings(for: id) { resp, err in
+        DBManager.shared.listPaintings(for: id) { resp, err in
             if let _ = err {
                 print("Error")
             }
@@ -65,18 +72,15 @@ extension FavouriteListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? PaintingCell
         let painting = paintings[indexPath.row]
-        //        cell.textLabel?.text = "\(painting.title) by \(painting.artist)"
-        //        cell.detailTextLabel?.text = "Year: \(painting.year)"
-        
         let base64String = painting.image
-        if let image = UIImage(data: base64String) {
-            cell?.cellImage?.image = image
+        if let imageData = Data(base64Encoded: painting.image, options: .ignoreUnknownCharacters) {
+            cell?.cellImage?.image = UIImage(data: imageData)
         }
         return cell!
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        return 200
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

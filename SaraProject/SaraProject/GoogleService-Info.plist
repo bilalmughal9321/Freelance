@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDLkswxEfczn1AjsEui7yEqBHqKqD-zOzM</string>
+	<string>AIzaSyDhCpo5PpN6mrkEcQZ2_5OO5FczMo395os</string>
 	<key>GCM_SENDER_ID</key>
-	<string>662555971302</string>
+	<string>576697898908</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.uae.arproject</string>
+	<string>com.sara.painting</string>
 	<key>PROJECT_ID</key>
-	<string>arproject-7a1cb</string>
+	<string>paintingproject-d60b2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>arproject-7a1cb.firebasestorage.app</string>
+	<string>paintingproject-d60b2.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:662555971302:ios:8079cb365e876c896c3527</string>
+	<string>1:576697898908:ios:12fea6226ef0790daf1a59</string>
 </dict>
 </plist>
