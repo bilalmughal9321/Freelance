@@ -14,6 +14,11 @@ struct Painting {
     var year: String
 }
 
+enum imageFor {
+    case painting
+    case profile
+}
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var profileImg: UIImageView!
@@ -27,10 +32,14 @@ class ViewController: UIViewController {
     var paintings: [PaintingModel] = []
     var selectedIndexPath: IndexPath?
     
+    var presentationTyle: imageFor = .painting
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        
+        
         
         startLoading()
         fetchList(id: DBManager.shared.userId) { arr in
@@ -45,11 +54,14 @@ class ViewController: UIViewController {
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(openImageGallery))
         profileImg.isUserInteractionEnabled = true
         profileImg.addGestureRecognizer(longPressRecognizer)
+        fetchProfile()
+
         
-        
-//        if let imageData = Data(base64Encoded: painting.image, options: .ignoreUnknownCharacters) {
-//
-//        }
+    }
+    
+    /// this function for getching the profile image from firebase
+    
+    private func fetchProfile() {
         startLoading()
         DBManager.shared.fetchProfileImageFromFirestore { image, error in
             self.stopLoading()
@@ -63,37 +75,25 @@ class ViewController: UIViewController {
                 print("No profile image found.")
             }
         }
-        
-//        DBManager.shared.fetchProfileImage(userId: DBManager.shared.userId) { data in
-//            DispatchQueue.main.async {
-//                if let datas = data, let imageData = UIImage(data: datas) {
-//                    self.profileImg.image = imageData
-//                }
-//                else {
-//                    self.profileImg.image = UIImage(systemName: "person.fill")
-//                }
-//            }
-//        }
-        
     }
-    
  
     @objc func openImageGallery() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.delegate = self
-        present(imagePickerController, animated: true, completion: nil)
+        presentationTyle = .profile
+        present(imagePickerController, animated: true, completion: {
+            self.fetchProfile()
+        })
     }
 
-    @IBAction func addPainting(_ sender: UIBarButtonItem) {
-        barBtn()
-    }
+  
     
     @IBAction func addPaint(_ sender: Any) {
         barBtn()
     }
     
-
+    /// fetch painting from firebase
     func fetchList(id: String,  _ completion: @escaping ([PaintingModel]) -> ()) {
         DBManager.shared.listPaintings(for: id) { resp, err in
             if let _ = err {
@@ -121,6 +121,9 @@ class ViewController: UIViewController {
 
 // MARK: # --------------------------- BAR BUTTON ------------------------------ # -
 
+/// 1. this function responsible for adding the painting in by using alert
+/// 2. first add title and subtitle in tetfield
+/// 3. then media source media sheet open and select option of camera and gallery
 extension ViewController {
     func barBtn() {
         let alert = UIAlertController(title: "New Painting", message: "Enter painting details", preferredStyle: .alert)
@@ -131,51 +134,97 @@ extension ViewController {
             guard let title = alert.textFields?[0].text,
                   let subtitle = alert.textFields?[1].text else { return }
             
-            self.presentImagePicker { selectedImage in
-                var imageBase64: String? = nil
-                
-                if let imageData = selectedImage?.jpegData(compressionQuality: 0.01) {
-//                if let imageData = self.compressImageToLimit(image: selectedImage!, limitInMB: 0.5) {
-                    imageBase64 = imageData.base64EncodedString()
+            let imageSourceAlert = UIAlertController(title: "Select Image Source", message: nil, preferredStyle: .actionSheet)
+            
+            
+            
+            // Camera option
+            let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+                self.presentationTyle = .painting
+                self.presentImagePicker2(sourceType: .camera) { selectedImage in
                     
-                    
-                    let newPainting = PaintingModel(identifier: DBManager.shared.generateRandomString, image: imageBase64 ?? "", title: title, subtitle: subtitle, isFavourite: false)
-                    let id = DBManager.shared.userId
-                    
-                    self.startLoading()
-                    DBManager.shared.addPaintingInFirestore(id, newPainting) { response in
-                        self.stopLoading()
-                        self.showAlertAction(title: "Alert", message: "Painting added"){
-                            
-                            self.startLoading()
-                            
-                            self.fetchList(id: id) { arr in
-                                
-                                self.stopLoading()
-                                
-                                self.paintings = arr
-                                self.tableView.reloadData()
-                            }
-                            
-                        }
-                        
-                        
-                        
-                        
-                        
-                    } _: { err in
-                        self.stopLoading()
-                        self.showAlert(title: "Error", message: "\(err.localizedDescription)")
-                    }
-
+                    self.handleImageSelection(selectedImage: selectedImage, title: title, subtitle: subtitle)
                 }
-                
             }
+            
+            // Gallery option
+            let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
+                self.presentationTyle = .painting
+                self.presentImagePicker2(sourceType: .photoLibrary) { selectedImage in
+                   
+                    self.handleImageSelection(selectedImage: selectedImage, title: title, subtitle: subtitle)
+                }
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            imageSourceAlert.addAction(cameraAction)
+            imageSourceAlert.addAction(galleryAction)
+            imageSourceAlert.addAction(cancelAction)
+            
+            self.present(imageSourceAlert, animated: true)
         }
         
         alert.addAction(saveAction)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alert, animated: true)
+    }
+    
+    func handleImageSelection(selectedImage: UIImage?, title: String, subtitle: String) {
+        guard let selectedImage = selectedImage else { return }
+        
+        if let imageData = selectedImage.jpegData(compressionQuality: 0.01) {
+            let imageBase64 = imageData.base64EncodedString()
+            let newPainting = PaintingModel(identifier: DBManager.shared.generateRandomString, image: imageBase64, title: title, subtitle: subtitle, isFavourite: false)
+            let id = DBManager.shared.userId
+            
+            self.startLoading()
+            DBManager.shared.addPaintingInFirestore(id, newPainting) { response in
+                self.stopLoading()
+                self.showAlertAction(title: "Alert", message: "Painting added") {
+                    self.startLoading()
+                    self.fetchList(id: id) { arr in
+                        self.stopLoading()
+                        self.paintings = arr
+                        self.tableView.reloadData()
+                    }
+                }
+            } _: { err in
+                self.stopLoading()
+                self.showAlert(title: "Error", message: "\(err.localizedDescription)")
+            }
+        }
+    }
+    
+    func handleImageSelectionEdit(selectedImage: UIImage?, title: String, subtitle: String, model: PaintingModel) {
+        guard let selectedImage = selectedImage else { return }
+        if let imageData = selectedImage.jpegData(compressionQuality: 0.01) {
+            
+            let imageBase64 = imageData.base64EncodedString()
+            
+            let id = DBManager.shared.userId
+            let paintingId = model.identifier
+            
+            let newPainting = PaintingModel(identifier: paintingId, image: imageBase64, title: title, subtitle: subtitle, isFavourite: model.isFavourite)
+            
+            self.startLoading()
+            DBManager.shared.updatePainting(for: id, identifier: paintingId, updatedPainting: newPainting) { err in
+                self.stopLoading()
+                if let _ = err {
+                    self.showAlert(title: "Error", message: "Error in updating painting")
+                }
+                else {
+                    self.startLoading()
+                    self.fetchList(id: id) { arr in
+                        self.stopLoading()
+                        self.paintings = arr
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+            
+        }
+        
     }
 }
 
@@ -213,6 +262,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "detail", sender: indexPath)
     }
     
+    /// delete the paiting using swipe right and after deleting fetch the list again for updating the list
     // MARK: - Swipe Actions
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, completionHandler in
@@ -246,6 +296,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
+    /// update the paiting using swipe left and after deleting fetch the list again for updating the list
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, completionHandler in
             let painting = self.paintings[indexPath.row]
@@ -255,42 +306,42 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
                 guard let title = alert.textFields?[0].text,
-                      let subtitle = alert.textFields?[1].text  else { return }
+                      let subtitle = alert.textFields?[1].text else { return }
                 
-                self.presentImagePicker { selectedImage in
-                    var imageBase64: String? = painting.image
-                    //                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.8) {
-                    //                        imageBase64 = imageData.base64EncodedString()
-                    //                    }
-                    
-                    
-                    if let imageData = selectedImage?.jpegData(compressionQuality: 0.01) {
+                let imageSourceAlert = UIAlertController(title: "Select Image Source", message: nil, preferredStyle: .actionSheet)
+                
+                
+                
+                // Camera option
+                let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
+                    self.presentationTyle = .painting
+                    self.presentImagePicker2(sourceType: .camera) { selectedImage in
                         
-                        imageBase64 = imageData.base64EncodedString()
+//                        self.handleImageSelection(selectedImage: selectedImage, title: title, subtitle: subtitle)
                         
-                        //                    if let imageData = self.compressImageToLimit(image: selectedImage!, limitInMB: 1) {
-                        let id = DBManager.shared.userId
-                        let paintingId = painting.identifier
-                        
-                        let newPainting = PaintingModel(identifier: paintingId, image: imageBase64 ?? "", title: title, subtitle: subtitle, isFavourite: false)
-                        
-                        self.startLoading()
-                        DBManager.shared.updatePainting(for: id, identifier: paintingId, updatedPainting: newPainting) { err in
-                            self.stopLoading()
-                            if let _ = err {
-                                self.showAlert(title: "Error", message: "Error in updating painting")
-                            }
-                            else {
-                                self.startLoading()
-                                self.fetchList(id: id) { arr in
-                                    self.stopLoading()
-                                    self.paintings = arr
-                                    self.tableView.reloadData()
-                                }
-                            }
-                        }
+                        self.handleImageSelectionEdit(
+                            selectedImage: selectedImage, title: title, subtitle: subtitle, model: painting)
                     }
                 }
+                
+                // Gallery option
+                let galleryAction = UIAlertAction(title: "Gallery", style: .default) { _ in
+                    self.presentationTyle = .painting
+                    self.presentImagePicker2(sourceType: .photoLibrary) { selectedImage in
+                       
+//                        self.handleImageSelection(selectedImage: selectedImage, title: title, subtitle: subtitle)
+                        
+                        self.handleImageSelectionEdit(selectedImage: selectedImage, title: title, subtitle: subtitle, model: painting)
+                    }
+                }
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                
+                imageSourceAlert.addAction(cameraAction)
+                imageSourceAlert.addAction(galleryAction)
+                imageSourceAlert.addAction(cancelAction)
+                
+                self.present(imageSourceAlert, animated: true)
             }
             
             alert.addAction(saveAction)
@@ -306,10 +357,23 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: # --------------------------- IMAGE PICKER ------------------------------ # -
 
-
+/// Media source delegate functions
 extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    
+    func presentImagePicker2(sourceType: UIImagePickerController.SourceType, completion: @escaping (UIImage?) -> Void) {
+        guard UIImagePickerController.isSourceTypeAvailable(sourceType) else {
+            self.showAlert(title: "Error", message: "\(sourceType == .camera ? "Camera" : "Gallery") not available.")
+            return
+        }
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = sourceType
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true // Optional, allow editing if required
+        
+        self.imagePickerCompletionHandler = completion
+        self.present(imagePicker, animated: true)
+    }
     
     func presentImagePicker(completion: @escaping (UIImage?) -> Void) {
         let imagePicker = UIImagePickerController()
@@ -323,17 +387,17 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let selectedImage = info[.originalImage] as? UIImage {
-            profileImg.image = selectedImage // Set the selected image to your imageView
             
-            let id = DBManager.shared.userId
-            
-            if let data = selectedImage.jpegData(compressionQuality: 0.01)?.base64EncodedString() {
-                startLoading()
-                DBManager.shared.uploadImageToStorage(imageString: data) { _ in
-                    self.stopLoading()
+            if presentationTyle == .profile{
+                if let data = selectedImage.jpegData(compressionQuality: 0.01)?.base64EncodedString() {
+                    startLoading()
+                    DBManager.shared.uploadImageToStorage(imageString: data) { _ in
+                        self.stopLoading()
+                        
+                        self.fetchProfile()
+                    }
                 }
             }
-            
             
         }
         
@@ -350,56 +414,6 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         imagePickerCompletionHandler = nil
     }
     
-    
-}
-
-extension ViewController {
-    
-//    func compressImageToLimit(image: UIImage, limitInMB: Double) -> Data? {
-//        let limitInBytes = limitInMB * 1024 * 1024 // Convert MB to bytes
-//        
-//        var compression: CGFloat = 1.0 // Maximum quality
-//        guard var imageData = image.jpegData(compressionQuality: compression) else {
-//            return nil
-//        }
-//        
-//        // Reduce quality until it fits the limit
-//        while imageData.count > Int(limitInBytes) && compression > 0 {
-//            compression -= 0.1 // Reduce compression quality
-//            if let compressedData = image.jpegData(compressionQuality: compression) {
-//                imageData = compressedData
-//            }
-//        }
-//        
-//        return imageData.count <= Int(limitInBytes) ? imageData : nil
-//    }
-    
-    func compressImageToLimit(image: UIImage, limitInMB: Double) -> String? {
-        let limitInBytes = limitInMB * 1024 * 1024 // Convert MB to bytes
-        
-        var compression: CGFloat = 1.0 // Maximum quality
-        guard var imageData = image.jpegData(compressionQuality: compression) else {
-            return nil
-        }
-        
-        // Reduce quality until it fits the limit
-        while imageData.count > Int(limitInBytes) && compression > 0 {
-            compression -= 0.1 // Reduce compression quality
-            if let compressedData = image.jpegData(compressionQuality: compression) {
-                imageData = compressedData
-            }
-        }
-        
-        // Ensure image size is within the limit
-        guard imageData.count <= Int(limitInBytes) else {
-            print("Failed to compress image within \(limitInMB) MB")
-            return nil
-        }
-        
-        // Convert compressed data to Base64
-        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
-        return base64String
-    }
     
 }
 

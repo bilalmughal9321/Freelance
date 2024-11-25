@@ -5,12 +5,22 @@
 //  Created by Bilal Mughal on 13/11/2024.
 //
 
+/*
+ 
+ MARK: DB MANAGER
+ 
+ The DBManager file handles all Firebase-related CRUD operations, including profile addition and updates
+ 
+ */
+
+
 import Foundation
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseFirestore
 import FirebaseStorage
 
+// Painting Model all the list of painting data can be fetch in this model
 struct PaintingModel: Codable {
     var identifier: String
     var image: String
@@ -21,6 +31,7 @@ struct PaintingModel: Codable {
 
 struct DBManager {
     
+    // static variable because of singleton class
     static var shared = DBManager()
     
     private init(){}
@@ -34,7 +45,6 @@ struct DBManager {
     var email: String = ""
     
     // MARK: # --------------------- LOGIN ---------------------- # -
-    
     func loginUser(email: String, password: String, completion: @escaping (String) -> Void, err: @escaping (Error) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -47,9 +57,7 @@ struct DBManager {
         }
     }
     
-    
-    
-       
+    // MARK: # --------------------- SIGN UP ---------------------- # -
     func signUpUser(email: String, password: String, completion: @escaping () -> Void, err: @escaping (Error) -> Void) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -62,71 +70,7 @@ struct DBManager {
         }
     }
     
-    func storeProfileImage(_ data: String, userId: String) {
-        let databaseRef = Database.database().reference().child("users").child(userId).child("profile_img")
-        
-        // Set the base64 string as the value in the database
-        databaseRef.setValue(data) { error, _ in
-            if let error = error {
-                print("Failed to store image:", error.localizedDescription)
-            } else {
-                print("Image stored successfully in Realtime Database")
-            }
-        }
-    }
-    
-    func fetchProfileImage(userId: String, completion: @escaping (Data?) -> Void) {
-        let databaseRef = Database.database().reference().child("users").child(userId).child("profile_img")
-        
-        databaseRef.observeSingleEvent(of: .value) { snapshot in
-            // Ensure the value is a string (base64 format)
-            if let base64String = snapshot.value as? String,
-               let imageData = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) {
-                completion(imageData)
-            } else {
-                print("Failed to fetch image or invalid data format.")
-                completion(nil)
-            }
-        }
-    }
-    
-    // MARK: # --------------------- ADD FAVOURITE PAINTING ---------------------- # -
-    
-    func AddFavourite(for userId: String, painting: PaintingModel, completion: @escaping (Error?) -> Void) {
-        let paintingsRef = database.child("users").child(userId).child("favourites")
-        
-        do {
-            // Encode the PaintingModel instance (painting) to JSON
-            let paintingData = try JSONEncoder().encode(painting)
-            
-            // Convert the JSON data into a dictionary that Firebase can store
-            if var paintingDict = try JSONSerialization.jsonObject(with: paintingData) as? [String: Any] {
-                // Remove the "id" field if you don't want it in Firebase
-                paintingDict.removeValue(forKey: "id")
-                
-                // Push the painting as a new element in the paintings array (without unique IDs)
-                paintingsRef.observeSingleEvent(of: .value) { snapshot in
-                    var paintingsArray = [Any]()
-                    if let currentPaintings = snapshot.value as? [Any] {
-                        paintingsArray = currentPaintings
-                    }
-                    
-                    // Append the new painting to the array
-                    paintingsArray.append(paintingDict)
-                    
-                    // Save the updated paintings array to Firebase
-                    paintingsRef.setValue(paintingsArray) { error, _ in
-                        completion(error)
-                    }
-                }
-            }
-        } catch {
-            completion(error)
-        }
-    }
-    
     // MARK: # --------------------- UPLOAD IMAGE IN FIREBASE ------------------ # -
-    
     func uploadImageToStorage(imageString: String, completion: @escaping (Error?) -> Void) {
         // Reference to Firestore
         let db = Firestore.firestore()
@@ -148,7 +92,6 @@ struct DBManager {
     }
     
     // MARK: # --------------------- FETCH IMAGE IN FIREBASE ------------------ # -
-    
     func fetchProfileImageFromFirestore(completion: @escaping (UIImage?, Error?) -> Void) {
         // Reference to Firestore
         let db = Firestore.firestore()
@@ -177,7 +120,6 @@ struct DBManager {
     }
     
     // MARK: # --------------------- ADD PAINTING ---------------------- # -
-    
     func addPaintingInFirestore(
         _ identifier: String,
         _ painting: PaintingModel,
@@ -215,9 +157,7 @@ struct DBManager {
             }
     }
     
-
     // MARK: # --------------------- DELETE PAINTING ---------------------- # -
-    
     func deletePainting(for userId: String, paintingId: String, completion: @escaping (Error?) -> Void) {
         
         // Reference to Firestore
@@ -244,35 +184,8 @@ struct DBManager {
         
     }
     
-    // MARK: # --------------------- DELETE FAVOURITE PAINTING ---------------------- # -
-    
-    func deleteFavouritePainting(for userId: String, paintingId: String, completion: @escaping (Error?) -> Void) {
-        let paintingsRef = database.child("users").child(userId).child("favourites")
-        
-        paintingsRef.observeSingleEvent(of: .value) { snapshot in
-            guard var paintingsArray = snapshot.value as? [[String: Any]] else {
-                completion(NSError(domain: "Firebase", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch paintings"]))
-                return
-            }
-            
-            // Find the index of the painting to delete
-            if let index = paintingsArray.firstIndex(where: { $0["identifier"] as? String == paintingId }) {
-                // Remove the painting from the array
-                paintingsArray.remove(at: index)
-                
-                // Save the updated array
-                paintingsRef.setValue(paintingsArray) { error, _ in
-                    completion(error)
-                }
-            } else {
-                completion(NSError(domain: "Firebase", code: 0, userInfo: [NSLocalizedDescriptionKey: "Painting not found"]))
-            }
-        }
-    }
-
     
     // MARK: # --------------------- UPDATE PAINTING ---------------------- # -
-    
     func updatePainting(for userId: String, identifier: String, updatedPainting: PaintingModel, completion: @escaping (Error?) -> Void) {
         
         // Reference to Firestore
@@ -311,7 +224,6 @@ struct DBManager {
     
     
     // MARK: # --------------------- LIST OF PAINTING ---------------------- # -
-    
     func listPaintings(for userId: String, completion: @escaping ([PaintingModel]?, Error?) -> Void) {
         
         let db = Firestore.firestore()
@@ -350,7 +262,6 @@ struct DBManager {
         
     }
     
-    
     // MARK: # --------------------- PAINTING EXIST OR NOT ---------------------- # -
     func doesPaintingExist(paintingID: String, completion: @escaping (Bool, Bool?, Error?) -> Void) {
         // Reference to Firestore
@@ -380,38 +291,6 @@ struct DBManager {
                }
            }
     }
-    
-    // MARK: # --------------------- LIST OF FAVOURITES PAINTING ---------------------- # -
-    
-    func listFavouritePaintings(for userId: String, completion: @escaping ([PaintingModel]?, Error?) -> Void) {
-        let paintingsRef = database.child("users").child(userId).child("favourites")
-        
-        paintingsRef.observeSingleEvent(of: .value) { snapshot in
-            guard let paintingsArray = snapshot.value as? [[String: Any]] else {
-                completion(nil, NSError(domain: "Firebase", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch paintings"]))
-                return
-            }
-            
-            // Map the paintings to PaintingModel instances
-            let paintings = paintingsArray.compactMap { paintingDict -> PaintingModel? in
-                // Convert the dictionary to Data
-                guard let data = try? JSONSerialization.data(withJSONObject: paintingDict, options: []) else {
-                    return nil
-                }
-                
-                // Decode the Data into PaintingModel
-                do {
-                    let painting = try JSONDecoder().decode(PaintingModel.self, from: data)
-                    return painting
-                } catch {
-                    return nil
-                }
-            }
-            
-            completion(paintings, nil)
-        }
-    }
-
     
     var generateRandomString: String {
         let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"

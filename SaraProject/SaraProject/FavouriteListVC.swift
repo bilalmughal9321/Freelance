@@ -7,6 +7,8 @@
 
 import UIKit
 
+/// all the favourites painting will be appeared here.
+
 class FavouriteListVC: UIViewController {
     
     
@@ -87,34 +89,6 @@ extension FavouriteListVC: UITableViewDelegate, UITableViewDataSource {
         performSegue(withIdentifier: "detail", sender: indexPath)
     }
     
-    // MARK: - Swipe Actions
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, completionHandler in
-            
-            
-            let id = DBManager.shared.userId
-            let paintingId = self.paintings[indexPath.row].identifier
-            
-            DBManager.shared.deleteFavouritePainting(for: id, paintingId: paintingId) { err in
-                DispatchQueue.main.async {
-                    if let _ = err {
-                        self.showAlert(title: "Error", message: "Error in deleting painting")
-                    }
-                    else {
-                        self.fetchList(id: id) { arr in
-                            self.paintings = arr
-                            self.tableView.reloadData()
-                        }
-                    }
-                }
-            }
-            
-            self.paintings.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
-        }
-        return UISwipeActionsConfiguration(actions: [deleteAction])
-    }
     
     
 }

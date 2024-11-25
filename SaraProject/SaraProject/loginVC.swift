@@ -15,13 +15,13 @@ class loginVC: UIViewController {
     
     @IBOutlet weak var emailField: UITextField!{
         didSet{
-            emailField.text = "bilal@gmail.com"
+            emailField.text = ""
         }
     }
     
     @IBOutlet weak var passwordField: UITextField!{
         didSet{
-            passwordField.text = "bilal1234"
+            passwordField.text = ""
         }
     }
     
@@ -51,7 +51,10 @@ class loginVC: UIViewController {
             DBManager.shared.userId = userId
             DBManager.shared.email = self.emailField.text!
             
+            self.stopLoading()
+            
             DispatchQueue.main.async {
+                
 //                self.showAlert(title: "Alert", message: "User login successfully")
             }
             self.performSegue(withIdentifier: "PaintingViewController", sender: sender)

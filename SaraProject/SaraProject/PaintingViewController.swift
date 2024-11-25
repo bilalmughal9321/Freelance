@@ -4,6 +4,7 @@
 
 import UIKit
 
+
 class PaintingViewController: UIViewController {
     
     var name = ""
@@ -19,9 +20,12 @@ class PaintingViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+
     
     
     }
+
+
 
     /*
     // MARK: - Navigation

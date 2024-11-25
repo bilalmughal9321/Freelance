@@ -7,6 +7,11 @@
 
 import UIKit
 
+/*
+ 
+ /// 1. this file is appear after click on painting and you can move this painting to favourites in this screen by using favourites button
+ 
+ */
 class PaintingDetailVC: UIViewController {
     
     

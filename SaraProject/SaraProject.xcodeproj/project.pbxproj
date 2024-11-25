@@ -31,6 +31,10 @@
 		9C14556F2CF20C6700175569 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9C14556E2CF20C6700175569 /* FirebaseFirestore */; };
 		9C1455712CF20C6700175569 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 9C1455702CF20C6700175569 /* FirebaseFirestoreCombine-Community */; };
 		9C1455732CF2173600175569 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 9C1455722CF2173600175569 /* FirebaseStorage */; };
+		9C33EF952CF507960077EBCA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33EF942CF507960077EBCA /* NetworkManager.swift */; };
+		9C33EF982CF5083C0077EBCA /* MusuemDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33EF972CF5083C0077EBCA /* MusuemDB.swift */; };
+		9C33EF9A2CF508B40077EBCA /* fetchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C33EF992CF508B40077EBCA /* fetchVC.swift */; };
+		9C5DB54C2CF3462A002CCEF4 /* arViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5DB54B2CF3462A002CCEF4 /* arViewController.swift */; };
 		9C7EA6E22CEDF27100A2D502 /* PaintingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7EA6E12CEDF27100A2D502 /* PaintingViewController.swift */; };
 		9C7EA73A2CEE1FB200A2D502 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7EA7392CEE1FB200A2D502 /* DetailsViewController.swift */; };
 		9CACD57C2CECAAAF00905DE4 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CACD57B2CECAAAF00905DE4 /* MapViewController.swift */; };
@@ -53,6 +57,10 @@
 		9C126D672CE5327000CD96C4 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		9C126D692CE5444C00CD96C4 /* PaintingDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintingDetailVC.swift; sourceTree = "<group>"; };
 		9C126D6B2CE54B3600CD96C4 /* FavouriteListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteListVC.swift; sourceTree = "<group>"; };
+		9C33EF942CF507960077EBCA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		9C33EF972CF5083C0077EBCA /* MusuemDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusuemDB.swift; sourceTree = "<group>"; };
+		9C33EF992CF508B40077EBCA /* fetchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = fetchVC.swift; sourceTree = "<group>"; };
+		9C5DB54B2CF3462A002CCEF4 /* arViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = arViewController.swift; sourceTree = "<group>"; };
 		9C7EA6E12CEDF27100A2D502 /* PaintingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaintingViewController.swift; sourceTree = "<group>"; };
 		9C7EA7392CEE1FB200A2D502 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		9CACD57B2CECAAAF00905DE4 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +107,7 @@
 		9C126D352CE515B900CD96C4 /* SaraProject */ = {
 			isa = PBXGroup;
 			children = (
+				9C33EF962CF508280077EBCA /* Api */,
 				9C126D4C2CE51EF200CD96C4 /* GoogleService-Info.plist */,
 				9C126D362CE515B900CD96C4 /* AppDelegate.swift */,
 				9C126D382CE515B900CD96C4 /* SceneDelegate.swift */,
@@ -109,6 +118,7 @@
 				9C126D442CE515BA00CD96C4 /* Info.plist */,
 				9C7EA7392CEE1FB200A2D502 /* DetailsViewController.swift */,
 				9C126D4A2CE5167E00CD96C4 /* PaintingCell.swift */,
+				9C5DB54B2CF3462A002CCEF4 /* arViewController.swift */,
 				9CACD57B2CECAAAF00905DE4 /* MapViewController.swift */,
 				9C126D5C2CE5222700CD96C4 /* DBManager.swift */,
 				9C126D632CE530CC00CD96C4 /* loginVC.swift */,
@@ -117,6 +127,7 @@
 				9C126D692CE5444C00CD96C4 /* PaintingDetailVC.swift */,
 				9C126D6B2CE54B3600CD96C4 /* FavouriteListVC.swift */,
 				9C7EA6E12CEDF27100A2D502 /* PaintingViewController.swift */,
+				9C33EF942CF507960077EBCA /* NetworkManager.swift */,
 			);
 			path = SaraProject;
 			sourceTree = "<group>";
@@ -126,6 +137,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9C33EF962CF508280077EBCA /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				9C33EF972CF5083C0077EBCA /* MusuemDB.swift */,
+				9C33EF992CF508B40077EBCA /* fetchVC.swift */,
+			);
+			path = Api;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -224,8 +244,12 @@
 				9C126D642CE530CC00CD96C4 /* loginVC.swift in Sources */,
 				9C126D6A2CE5444C00CD96C4 /* PaintingDetailVC.swift in Sources */,
 				9CACD57C2CECAAAF00905DE4 /* MapViewController.swift in Sources */,
+				9C5DB54C2CF3462A002CCEF4 /* arViewController.swift in Sources */,
 				9C126D662CE530DF00CD96C4 /* RegistrationVC.swift in Sources */,
+				9C33EF982CF5083C0077EBCA /* MusuemDB.swift in Sources */,
 				9C126D4B2CE5167E00CD96C4 /* PaintingCell.swift in Sources */,
+				9C33EF9A2CF508B40077EBCA /* fetchVC.swift in Sources */,
+				9C33EF952CF507960077EBCA /* NetworkManager.swift in Sources */,
 				9C7EA73A2CEE1FB200A2D502 /* DetailsViewController.swift in Sources */,
 				9C126D682CE5327000CD96C4 /* Extension.swift in Sources */,
 			);

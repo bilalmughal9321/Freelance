@@ -8,6 +8,8 @@
 import UIKit
 import CoreLocation
 
+/// this screen we have mona lisa information and you can move image into favourites
+
 class DetailsViewController: UIViewController, CLLocationManagerDelegate {
     
     
@@ -24,14 +26,7 @@ class DetailsViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        
-//        locationManager.requestWhenInUseAuthorization()
-//        
-//        locationManager.delegate = self
+ 
     }
     
     override func viewDidAppear(_ animated: Bool) {
