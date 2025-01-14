@@ -15,15 +15,12 @@ struct Message: Identifiable {
 }
 
 struct ChatView: View {
-    @State private var messages: [Message] = [
-        Message(text: "Hi there!", isSender: true, time: "10:30 AM"),
-        Message(text: "Hello! How are you?", isSender: false, time: "10:31 AM"),
-        Message(text: "I am good, thanks! I am good, thanks! I am good, thanks! I am good, thanks!", isSender: true, time: "10:32 AM")
-    ]
+    @State private var messages: [Message] = []
     @State private var newMessageText = ""
     
     var body: some View {
         VStack {
+            // Scrollable Chat Messages
             ScrollView {
                 VStack(spacing: 10) {
                     ForEach(messages) { message in
@@ -41,15 +38,86 @@ struct ChatView: View {
                 .padding()
             }
             
+            // Centered Referral Form
+            VStack {
+                Text("Outside of the group")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 10)
+                
+                VStack(spacing: 25) {
+                    TextField("Referral name", text: .constant(""))
+                        .padding(.leading)
+                        .padding(5)
+                        .background(Capsule().stroke(Color.gray, lineWidth: 1))
+                        .foregroundColor(.white)
+                    
+                    TextField("Referral phone number", text: .constant(""))
+                        .padding(.leading)
+                        .padding(5)
+                        .background(Capsule().stroke(Color.gray, lineWidth: 1))
+                        .foregroundColor(.white)
+                    
+                    TextField("Referral email", text: .constant(""))
+                        .padding(.leading)
+                        .padding(5)
+                        .background(Capsule().stroke(Color.gray, lineWidth: 1))
+                        .foregroundColor(.white)
+                    
+                    Button(action: {
+                        print("Referral sent!")
+                    }) {
+                        Text("Send referral")
+                            .bold()
+                            .padding(5)
+                            .frame(maxWidth: .infinity)
+                            .background(Capsule().fill(Color.blue))
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                }
+                .padding()
+                
+                Text("Inside the group")
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.top, 20)
+                    .bold()
+                
+                TextField("Search", text: .constant(""))
+                    .padding(.leading)
+                    .padding(5)
+                    .background(Capsule().stroke(Color.gray, lineWidth: 1))
+                    .foregroundColor(.gray)
+                    .padding()
+            }
+            
+//            .background(Color.black.opacity(0.8))
+            .cornerRadius(12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding(10)
+            .background(
+                RoundedRectangle(cornerRadius: 20).stroke(.gray.opacity(0.2), lineWidth: 1)
+            )
+            .background(
+                RoundedRectangle(cornerRadius: 20).fill(.gray.opacity(0.2))
+            )
+            .padding(40)
+            .padding(.vertical)
+//            .frame(maxWidth: 300)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 12)
+//                    .stroke(Color.gray, lineWidth: 1)
+//                    .padding()
+//            )
+            
             // Bottom input area
             HStack {
                 TextField("Message", text: $newMessageText)
-//                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .foregroundStyle(.white)
                     .padding(.horizontal, 8)
                     .frame(height: 50)
-                    .background(RoundedRectangle(cornerRadius: 8).stroke(.gray, lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/))
-                    
+                    .background(RoundedRectangle(cornerRadius: 8).stroke(.gray, lineWidth: 1))
                 
                 Button(action: sendMessage) {
                     Text("Send")
@@ -60,7 +128,6 @@ struct ChatView: View {
                         .cornerRadius(8)
                 }
             }
-            
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -81,6 +148,7 @@ struct ChatView: View {
     }
 }
 
+// Message Bubble
 struct MessageBubble: View {
     let message: Message
     let backgroundColor: Color
@@ -99,7 +167,7 @@ struct MessageBubble: View {
             .padding()
             .background(backgroundColor)
             .cornerRadius(16, corners: !isSender ? [.topRight, .bottomLeft, .bottomRight] : [.topLeft, .bottomLeft, .bottomRight])
-            .padding(isSender ? .leading : .trailing, 50) // Adjusts bubble padding
+            .padding(isSender ? .leading : .trailing, 50)
         }
     }
 }

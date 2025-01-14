@@ -27,10 +27,10 @@ struct MainTabView: View {
                         Label("Group", systemImage: "person.3")
                     }
                 
-                ChatView()
-                    .tabItem {
-                        Label("Chat", systemImage: "message")
-                    }
+//                ChatView()
+//                    .tabItem {
+//                        Label("Chat", systemImage: "message")
+//                    }
                 
                 SettingsView(settingsViewModel: settingsViewModel)
                     .tabItem {
