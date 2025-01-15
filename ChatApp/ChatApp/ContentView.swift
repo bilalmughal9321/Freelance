@@ -44,23 +44,37 @@ struct ContentView: View {
                                     ReceiverView(message: message)
                                 }
                             }
-                            Spacer()
+                            Spacer().id("Bottom")
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding()
+                        .onChange(of: messages) {
+                            withAnimation {
+                                scrollView.scrollTo("Bottom", anchor: .bottom)
+                            }
+                        }
+                        .onChange(of: isMediaSelected) {
+                            if isMediaSelected {
+                                withAnimation {
+                                    scrollView.scrollTo("Bottom", anchor: .bottom)
+                                }
+                            }
+                        }
                         
                     }
                 }
                 .onAppear {
                     messages.append(Message(text: data, isSender: true))
                     messages.append(Message(text: data, isSender: false))
-                    messages.append(Message(text: data, isSender: true))
+//                    messages.append(Message(text: data, isSender: true))
 //                    Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
 //                        time += 20
 //                    }
                 }
                 
-                MessageSection(isMedia: $isMediaSelected)
+                MessageSection(isMedia: $isMediaSelected) { value in
+                    messages.append(Message(text: value, isSender: true))
+                }
                 
                 if isMediaSelected {
                     Text("Media Selection View")
@@ -91,6 +105,7 @@ struct ContentView: View {
 struct MessageSection: View {
     @State var value: String = ""
     @Binding var isMedia: Bool
+    var onMessage: (String) -> ()
     var body: some View {
         HStack{
             Button(action: {
@@ -110,7 +125,13 @@ struct MessageSection: View {
                     .frame(minHeight: 30)
                     .padding(.leading)
                 
-                Button(action: {}) {
+                Button(action: {
+                    
+                    guard value != "" else { return }
+                    
+                    onMessage(value)
+                    
+                }) {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 35))
                         .frame(width: 50, height: 50)
@@ -174,3 +195,5 @@ struct ReceiverView: View {
 #Preview {
     ContentView()
 }
+
+
