@@ -9,7 +9,8 @@ import SwiftUI
 
 struct Message: Identifiable, Equatable {
     var id = UUID()
-    var text: String
+    var text: String?
+    var image: String?
     var isSender: Bool
 }
 
@@ -18,7 +19,9 @@ struct ContentView: View {
     @State var time: Double = 1.0
     @State var messages: [Message] = []
     @State var isMediaSelected: Bool = false
+    @State var selectedImages: [String] = []
     
+    let imageNames = ["alert", "flower"]
     
     var data: String = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived"
     
@@ -37,8 +40,21 @@ struct ContentView: View {
                         VStack(spacing: 30) {
                             
                             ForEach(messages) { message in
+                                
                                 if message.isSender {
-                                    SenderView(message: message)
+                                    
+                                    if let imageName = message.image {
+                                        Image(imageName)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(maxWidth: 200, maxHeight: 150)
+                                            .cornerRadius(10)
+                                            .padding()
+                                    }
+                                    else if let text = message.text {
+                                        SenderView(message: message)
+                                    }
+                                    
                                 }
                                 else {
                                     ReceiverView(message: message)
@@ -72,13 +88,30 @@ struct ContentView: View {
 //                    }
                 }
                 
-                MessageSection(isMedia: $isMediaSelected) { value in
-                    messages.append(Message(text: value, isSender: true))
-                }
+//                MessageSection(isMedia: $isMediaSelected) { value in
+//                    messages.append(Message(text: value, isSender: true))
+//                }
+                
+                MessageSection(
+                    isMedia: $isMediaSelected,
+                    selectedImages: $selectedImages,
+                    onMessage: { value in
+                        messages.append(Message(text: value, isSender: true))
+                    }, onImages: { images in
+                        for imageName in selectedImages {
+                            messages.append(Message(image: imageName, isSender: true))
+                        }
+                        selectedImages.removeAll()
+                        isMediaSelected = false
+                        
+                    }
+                )
                 
                 if isMediaSelected {
-                    Text("Media Selection View")
-                        .frame(maxWidth: .infinity, maxHeight: 230)
+//                    Text("Media Selection View")
+//                        .frame(maxWidth: .infinity, maxHeight: 230)
+                    MediaGridView(images: imageNames, selectedImages: $selectedImages)
+                                            .frame(maxWidth: .infinity, maxHeight: 230)
                 }
             }
         }
@@ -102,12 +135,51 @@ struct ContentView: View {
     
 }
 
-struct MessageSection: View {
-    @State var value: String = ""
-    @Binding var isMedia: Bool
-    var onMessage: (String) -> ()
+struct MediaGridView: View {
+    let images: [String]
+    @Binding var selectedImages: [String]
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 100), spacing: 10)
+    ]
+    
     var body: some View {
-        HStack{
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(images, id: \.self) { imageName in
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 80, height: 80)
+                        .padding(.horizontal)
+                        .cornerRadius(8)
+                        .onTapGesture {
+                            if selectedImages.contains(imageName) {
+                                selectedImages.removeAll { $0 == imageName }
+                            } else {
+                                selectedImages.append(imageName)
+                            }
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(selectedImages.contains(imageName) ? Color.blue : Color.clear, lineWidth: 2)
+                        )
+                }
+            }
+            .padding()
+        }
+    }
+}
+
+struct MessageSection: View {
+    @State private var value: String = ""
+    @Binding var isMedia: Bool
+    @Binding var selectedImages: [String]
+    var onMessage: (String) -> Void
+    var onImages: ([String]) -> Void
+    
+    var body: some View {
+        HStack {
             Button(action: {
                 withAnimation {
                     isMedia.toggle()
@@ -127,9 +199,17 @@ struct MessageSection: View {
                 
                 Button(action: {
                     
-                    guard value != "" else { return }
+                    if value != "" {
+                        onMessage(value)
+                    }
                     
-                    onMessage(value)
+                    if !selectedImages.isEmpty {
+                        onImages(selectedImages)
+                    }
+                    
+//                    guard value != "" else { return }
+                    
+                    
                     
                 }) {
                     Image(systemName: "arrow.up.circle.fill")
@@ -153,15 +233,31 @@ struct SenderView: View {
             Image(systemName: "person.fill")
                 .foregroundStyle(.black)
                 .frame(width: 30, height: 30)
-                .background(Circle().fill(LinearGradient(colors: [.white], startPoint: .topTrailing, endPoint: .bottomLeading)))
-            Text(message.text)
+                .background(
+                    Circle().fill(
+                        LinearGradient(
+                            colors: [.white],
+                            startPoint: .topTrailing,
+                            endPoint: .bottomLeading
+                        )
+                    )
+                )
+            
+            Text(message.text ?? "")
                 .foregroundStyle(.white)
-//                .bold()
                 .font(.footnote)
                 .padding(10)
                 .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(LinearGradient(colors: [.blue], startPoint: .topTrailing, endPoint: .bottomLeading))
+                    RoundedRectangle(
+                        cornerRadius: 10
+                    )
+                    .fill(
+                        LinearGradient(
+                            colors: [.blue],
+                            startPoint: .topTrailing,
+                            endPoint: .bottomLeading
+                        )
+                    )
                 )
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -175,7 +271,7 @@ struct ReceiverView: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            Text(message.text)
+            Text(message.text ?? "")
                 .foregroundStyle(.white)
 //                .bold()
                 .font(.footnote)
