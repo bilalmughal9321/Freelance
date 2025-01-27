@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9C40AA822D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9CE79F142D36E592009E36C6 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C40AA822D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = ChatApp;
 			packageProductDependencies = (
+				9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */,
 			);
 			productName = ChatApp;
 			productReference = 9CE79F142D36E592009E36C6 /* ChatApp.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 9CE79F0B2D36E592009E36C6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9CE79F152D36E592009E36C6 /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishanraja/FloatingLabelTextFieldSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */;
+			productName = FloatingLabelTextFieldSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9CE79F0C2D36E592009E36C6 /* Project object */;
 }
