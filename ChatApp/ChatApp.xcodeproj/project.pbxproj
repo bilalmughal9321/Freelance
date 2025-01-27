@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9C40AA822D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */; };
+		9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C40AA822D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI in Frameworks */,
+				9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			);
 			name = ChatApp;
 			packageProductDependencies = (
-				9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */,
+				9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */,
 			);
 			productName = ChatApp;
 			productReference = 9CE79F142D36E592009E36C6 /* ChatApp.app */;
@@ -101,7 +101,7 @@
 			mainGroup = 9CE79F0B2D36E592009E36C6;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */,
+				9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9CE79F152D36E592009E36C6 /* Products */;
@@ -335,7 +335,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */ = {
+		9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishanraja/FloatingLabelTextFieldSwiftUI";
 			requirement = {
@@ -346,9 +346,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9C40AA812D47B8C60082AF02 /* FloatingLabelTextFieldSwiftUI */ = {
+		9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9C40AA802D47B8C60082AF02 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */;
+			package = 9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */;
 			productName = FloatingLabelTextFieldSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
