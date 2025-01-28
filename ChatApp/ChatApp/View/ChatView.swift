@@ -271,18 +271,6 @@ struct MessageSection: View {
                         onImages(selectedImages)
                     }
                     
-//                    if themeModel.themeApp == .blue {
-//                        withAnimation {
-//                            themeModel.themeApp = .red
-//                        }
-//                      
-//                    }
-//                    else {
-//                        withAnimation {
-//                            themeModel.themeApp = .blue
-//                        }
-//                    }
-                    
                 }) {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 35))

@@ -20,6 +20,8 @@ struct HomeView: View {
                 
                 VStack(spacing: 30){
                     
+                    Spacer()
+                    
                     Text("Welcome Back")
                         .subtitle()
                         .foregroundStyle(.white)
@@ -52,6 +54,28 @@ struct HomeView: View {
                     }
                     
             
+                    Spacer()
+                    
+                    Button{
+                        withAnimation {
+                            if themeModel.themeApp == .blue {
+                                themeModel.themeApp = .red
+                            }
+                            else {
+                                themeModel.themeApp = .blue
+                            }
+                        }
+                        
+                    } label: {
+                        Text("Switch Theme")
+                            .bold()
+                            .foregroundStyle(.white)
+                            .headline()
+                            .frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
+                            .padding(5)
+//                            .background(Capsule().fill(.white))
+                            .padding(.horizontal, 40)
+                    }
                     
 //                    Button {
 //                        if themeModel.themeApp == .blue {

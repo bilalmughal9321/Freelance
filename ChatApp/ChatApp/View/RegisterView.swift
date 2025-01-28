@@ -120,23 +120,7 @@ struct SignupView: View {
                                 .padding(.horizontal)
                                 .padding(.top, 40)
                         }
-                        
-                        Button {
-                            if themeModel.themeApp == .blue {
-                                withAnimation {
-                                    themeModel.themeApp = .red
-                                }
-                                
-                            }
-                            else {
-                                withAnimation {
-                                    themeModel.themeApp = .blue
-                                }
-                            }
-                        } label: {
-                            Text("jabsjdhbasjhbajhsfbajsfb")
-                            
-                        }
+                      
                         
                     }
                     
