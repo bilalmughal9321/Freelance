@@ -8,15 +8,29 @@
 
 /* Begin PBXBuildFile section */
 		9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */; };
+		9C923ED72D48CF5D0071784B /* OTPView in Frameworks */ = {isa = PBXBuildFile; productRef = 9C923ED62D48CF5D0071784B /* OTPView */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9CE79F142D36E592009E36C6 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9C923EA42D48A7930071784B /* Exceptions for "ChatApp" folder in "ChatApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9CE79F132D36E592009E36C6 /* ChatApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9CE79F162D36E592009E36C6 /* ChatApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9C923EA42D48A7930071784B /* Exceptions for "ChatApp" folder in "ChatApp" target */,
+			);
 			path = ChatApp;
 			sourceTree = "<group>";
 		};
@@ -28,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */,
+				9C923ED72D48CF5D0071784B /* OTPView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +86,7 @@
 			name = ChatApp;
 			packageProductDependencies = (
 				9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */,
+				9C923ED62D48CF5D0071784B /* OTPView */,
 			);
 			productName = ChatApp;
 			productReference = 9CE79F142D36E592009E36C6 /* ChatApp.app */;
@@ -102,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */,
+				9C923ED52D48CF5D0071784B /* XCRemoteSwiftPackageReference "otpview-swiftui" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9CE79F152D36E592009E36C6 /* Products */;
@@ -264,6 +281,7 @@
 				DEVELOPMENT_TEAM = CCVJ6KJPWZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -293,6 +311,7 @@
 				DEVELOPMENT_TEAM = CCVJ6KJPWZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChatApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -343,6 +362,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		9C923ED52D48CF5D0071784B /* XCRemoteSwiftPackageReference "otpview-swiftui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mukeshsolanki/otpview-swiftui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -350,6 +377,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */;
 			productName = FloatingLabelTextFieldSwiftUI;
+		};
+		9C923ED62D48CF5D0071784B /* OTPView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C923ED52D48CF5D0071784B /* XCRemoteSwiftPackageReference "otpview-swiftui" */;
+			productName = OTPView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

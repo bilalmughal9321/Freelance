@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct ChatAppApp: App {
+    
+    @StateObject var themeModel = theme()
+    
     var body: some Scene {
         WindowGroup {
-            SignupView()
+            HomeView()
+                .environmentObject(themeModel)
         }
     }
 }
