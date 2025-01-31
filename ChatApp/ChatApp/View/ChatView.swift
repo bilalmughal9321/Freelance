@@ -289,9 +289,6 @@ struct SenderView: View {
     @EnvironmentObject var themeModel: theme
     
     let message: Message
-    
-    let gradientColor = LinearGradient(colors: [Color(red: 181/255, green: 24/255, blue: 55/255) , Color(red: 44/255, green: 25/255, blue: 54/255)], startPoint: .leading, endPoint: .trailing)
-    
     var body: some View {
         HStack(alignment: .top) {
 //            Image(systemName: "person.fill")

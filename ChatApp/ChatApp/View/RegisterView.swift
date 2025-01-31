@@ -8,6 +8,7 @@
 import Foundation
 import FloatingLabelTextFieldSwiftUI
 import SwiftUI
+import Alamofire
 
 struct SignupView: View {
     
@@ -40,7 +41,6 @@ struct SignupView: View {
                             .foregroundStyle(.white)
                             .bold()
                     }
-                    
                     
                     Text("Create Your Account")
                         .font(.largeTitle)
@@ -109,7 +109,46 @@ struct SignupView: View {
                             .frame(height: 70)
                             .padding(.horizontal)
                         
-                        NavigationLink(destination: ChatView().environmentObject(themeModel)) {
+//                        NavigationLink(destination: Toaster()) {
+//
+//                        }
+                        
+                        Button {
+                            
+                            guard name != "" else {
+                                return print("name is missing")
+                            }
+                            
+                            guard email != "" else {
+                                return print("email is missing")
+                            }
+                            
+                            guard number != "" else {
+                                return print("number is missing")
+                            }
+                            
+                            guard password != "" else {
+                                return print("password is missing")
+                            }
+                       
+                            
+                            let request = registerRequest(name: name, email: email, password: password)
+                            
+                            Utils.showActivityIndicator()
+                            
+                            AlamofireWrapper.shared
+                                .request(
+                                    method: .post,
+                                    endpoint: "/register",
+                                    parameters: request) {  (result: Result<OTPResponse, Error>) in
+                                        
+                                        DispatchQueue.main.async {
+                                            Utils.hideActivityIndicator()
+                                        }
+                                       
+                                    }
+                            
+                        } label: {
                             Text("Sign up")
                                 .foregroundStyle(.white)
                                 .bold()
@@ -120,6 +159,7 @@ struct SignupView: View {
                                 .padding(.horizontal)
                                 .padding(.top, 40)
                         }
+                        
                       
                         
                     }
@@ -138,3 +178,54 @@ struct SignupView: View {
         .navigationBarBackButtonHidden(true)
     }
 }
+
+#Preview {
+    Toaster()
+}
+
+struct Toaster: View {
+    var msg: String = "Invalid Credentials"
+    @State var isVisible: Bool = true
+
+    var body: some View {
+        if isVisible {
+            Text(msg)
+                .foregroundStyle(.white)
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.black.opacity(0.7))
+                )
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        withAnimation {
+                            isVisible = false
+                        }
+                       
+                    }
+                }
+        }
+    }
+}
+
+struct registerRequest: Encodable {
+    let name: String
+    let email: String
+    let password: String
+}
+
+struct OTPResponse: Codable {
+    let data: otpData?
+    let message: String?
+}
+
+struct otpData: Codable {
+    let otpCode: String
+    let emailSent: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case otpCode = "otp_code"
+        case emailSent = "email_sent"
+    }
+}
+

@@ -31,7 +31,6 @@ struct HomeView: View {
                         Text("Sign in")
                             .bold()
                             .foregroundStyle(.white)
-//                            .font(.title2)
                             .headline()
                             .background(.clear)
                             .frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
@@ -73,31 +72,8 @@ struct HomeView: View {
                             .headline()
                             .frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
                             .padding(5)
-//                            .background(Capsule().fill(.white))
                             .padding(.horizontal, 40)
                     }
-                    
-//                    Button {
-//                        if themeModel.themeApp == .blue {
-//                            withAnimation {
-//                                themeModel.themeApp = .red
-//                            }
-//                            
-//                        }
-//                        else {
-//                            withAnimation {
-//                                themeModel.themeApp = .blue
-//                            }
-//                        }
-//                    } label: {
-//                        Text("jabsjdhbasjhbajhsfbajsfb")
-//                        
-//                    }
-                    
-                    
-                 
-                        
-                    
                     
                 }
                 

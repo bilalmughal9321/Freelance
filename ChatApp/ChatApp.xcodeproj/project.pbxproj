@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9C293BF32D4CFB540095A389 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9C293BF22D4CFB540095A389 /* Alamofire */; };
+		9C293BF52D4CFB540095A389 /* AlamofireDynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 9C293BF42D4CFB540095A389 /* AlamofireDynamic */; };
+		9C293BFA2D4CFC690095A389 /* CustomLoader in Frameworks */ = {isa = PBXBuildFile; productRef = 9C293BF92D4CFC690095A389 /* CustomLoader */; };
 		9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */; };
 		9C923ED72D48CF5D0071784B /* OTPView in Frameworks */ = {isa = PBXBuildFile; productRef = 9C923ED62D48CF5D0071784B /* OTPView */; };
 /* End PBXBuildFile section */
@@ -41,8 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C293BF32D4CFB540095A389 /* Alamofire in Frameworks */,
+				9C293BF52D4CFB540095A389 /* AlamofireDynamic in Frameworks */,
 				9C3F58F22D47EF870046F933 /* FloatingLabelTextFieldSwiftUI in Frameworks */,
 				9C923ED72D48CF5D0071784B /* OTPView in Frameworks */,
+				9C293BFA2D4CFC690095A389 /* CustomLoader in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +93,9 @@
 			packageProductDependencies = (
 				9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */,
 				9C923ED62D48CF5D0071784B /* OTPView */,
+				9C293BF22D4CFB540095A389 /* Alamofire */,
+				9C293BF42D4CFB540095A389 /* AlamofireDynamic */,
+				9C293BF92D4CFC690095A389 /* CustomLoader */,
 			);
 			productName = ChatApp;
 			productReference = 9CE79F142D36E592009E36C6 /* ChatApp.app */;
@@ -119,6 +128,8 @@
 			packageReferences = (
 				9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */,
 				9C923ED52D48CF5D0071784B /* XCRemoteSwiftPackageReference "otpview-swiftui" */,
+				9C293BF12D4CFB540095A389 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				9C293BF82D4CFC690095A389 /* XCRemoteSwiftPackageReference "CustomLoader" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9CE79F152D36E592009E36C6 /* Products */;
@@ -354,6 +365,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9C293BF12D4CFB540095A389 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		9C293BF82D4CFC690095A389 /* XCRemoteSwiftPackageReference "CustomLoader" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bilalmughal9321/CustomLoader.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishanraja/FloatingLabelTextFieldSwiftUI";
@@ -373,6 +400,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9C293BF22D4CFB540095A389 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C293BF12D4CFB540095A389 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		9C293BF42D4CFB540095A389 /* AlamofireDynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C293BF12D4CFB540095A389 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = AlamofireDynamic;
+		};
+		9C293BF92D4CFC690095A389 /* CustomLoader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9C293BF82D4CFC690095A389 /* XCRemoteSwiftPackageReference "CustomLoader" */;
+			productName = CustomLoader;
+		};
 		9C3F58F12D47EF870046F933 /* FloatingLabelTextFieldSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9C3F58F02D47EF870046F933 /* XCRemoteSwiftPackageReference "FloatingLabelTextFieldSwiftUI" */;

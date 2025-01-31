@@ -118,3 +118,35 @@ struct DateFunc {
     }
     
 }
+
+struct Utils {
+    
+    static var overlay: UIView?
+    static func showActivityIndicator() {
+        
+        let window = UIApplication.shared.keyWindow ?? UIWindow(frame: CGRect.zero)
+        
+        DispatchQueue.main.async {
+            overlay?.removeFromSuperview()
+            overlay = UIView(frame: window.bounds)
+            overlay!.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+            overlay!.isUserInteractionEnabled = true // Blocks user interaction
+            
+            // Add activity indicator
+            let activityIndicator = UIActivityIndicatorView(style: .large)
+            activityIndicator.color = .white
+            activityIndicator.center = overlay!.center
+            activityIndicator.startAnimating()
+            overlay!.addSubview(activityIndicator)
+            
+            window.addSubview(overlay!)
+        }
+    }
+    
+    static func hideActivityIndicator() {
+        DispatchQueue.main.async {
+            overlay?.removeFromSuperview()
+        }
+    }
+    
+}
